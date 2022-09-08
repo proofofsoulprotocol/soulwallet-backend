@@ -3,10 +3,21 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
+var mongoose = require('mongoose');
+var config = require('./config');
 
 var port = process.env.PORT || 3000;
-
 var indexRouter = require('./routes/index');
+
+mongoose.connect(config.mongodb);
+const database = mongoose.connection;
+database.on('error', (error) => {
+    console.log(error)
+});
+database.once('connected', () => {
+    console.log('Database Connected');
+});
+
 
 var app = express();
 
