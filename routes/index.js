@@ -14,12 +14,12 @@ var apilib = require('../api/apilib');
 router.get('/', function(req, res, next) {
   res.json({"data": "hello soulwallet! updated!"});
 });
-router.get('/verifyEmail', function(req, res, next) {
+router.get('/verifyEmail', function(req, res, verifyEmail) {
   // if(req.query.email){
   //   res.json({"data": "hello soulwallet! updated!"+ req.query.email});
   // } 
-  [result, json] = verifyEmail(req);
-  res.json(json);
+  // [result, json] = verifyEmail(req);
+  // res.json(json);
 });
 
 
