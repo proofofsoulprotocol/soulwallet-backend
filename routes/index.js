@@ -18,12 +18,13 @@ router.get('/', function(req, res, next) {
   res.json({"data": "hello soulwallet! updated!"});
 });
 
+
 router.get('/verifyEmail', function(req, res, next) {
   // if(req.query.email){
   //   res.json({"data": "hello soulwallet! updated!"+ req.query.email});
   // } 
-  [result, json] = verifyEmail(req);
-  res.json(json);
+  // [result, json] = verifyEmail(req);
+  // res.json(json);
 });
 
 
