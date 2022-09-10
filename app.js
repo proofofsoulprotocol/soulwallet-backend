@@ -9,19 +9,41 @@ var config = require('./config');
 var port = process.env.PORT || 3000;
 var indexRouter = require('./routes/index');
 
-// console.log(config.mongodb);
-// mongoose.connect(config.mongodb);
-mongoose.connect('mongodb://localhost/soulwallet');
-const database = mongoose.connection;
-database.on('error', (error) => {
-    console.log(error)
-});
-database.once('connected', () => {
-    console.log('Database Connected');
-});
+const main = async () => {
+  console.log("mongodb uri: " + config.mongodbURI);
+  await mongoose.connect(config.mongodbURI, config.mongodbConfig);
+  console.log("database connected");
+
+  var app = express();
+  app.use(logger('dev'));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
+  app.set('trust proxy', 2);
+
+  app.use('/', indexRouter);
+  app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
+
+  // error handler
+  app.use(function(err, req, res, next) {
+    // only providing error in development
+    res.status(err.status || 500);
+    res.json({
+      message: err.message,
+      error: config.env == 'development' ? err : {}
+    });
+  });
+
+  var server = http.createServer(app);
+  server.listen(port, () => {
+    console.log('Express server listening on port ' + port)
+  });
+};
+
+main();
 
 
-var app = express();
+
 
 // APIs for Chrome plugin 
 // 1. verifyEmail, input: email, output: random number(6) in mail.
@@ -69,34 +91,3 @@ var app = express();
 //       }
 //   ]
 // }
-
-
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-
-app.use('/', indexRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.json({});
-});
-
-var server = http.createServer(app)
-server.listen(port, () => {
-  console.log('Express server listening on port ' + port)
-})
