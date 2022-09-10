@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# jason add to ignore .evn
+.env

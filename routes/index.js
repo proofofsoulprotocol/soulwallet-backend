@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var apilib = require('../api/apilib');
+// var apilib = require('../api/apilib');
 var config = require('../config');
 
 const Model = require('../models/model');
+// const User = require('../models/user');
 
 // APIs for Chrome plugin 
 // 1. verifyEmail, input: email, output: random number(6) in mail.
@@ -18,17 +19,7 @@ router.get('/', function(req, res, next) {
   res.json({"data": "hello soulwallet! updated!"});
 });
 
-
-router.get('/verifyEmail', function(req, res, next) {
-  // if(req.query.email){
-  //   res.json({"data": "hello soulwallet! updated!"+ req.query.email});
-  // } 
-  // [result, json] = verifyEmail(req);
-  // res.json(json);
-});
-
-
-//Post Method
+// Post Method
 router.post('/post', async (req, res) => {
   const data = new Model({
       name: req.body.name,
@@ -43,6 +34,20 @@ router.post('/post', async (req, res) => {
       res.status(400).json({ message: error.message })
   }
 });
+
+// router.post('/addUser', async (req, res) => {
+//   const data = new User({
+//       email: req.body.email,
+//       wallet_address: req.body.wallet_address
+//   })
+//   try {
+//       const dataToSave = await data.save();
+//       res.status(200).json(dataToSave)
+//   }
+//   catch (error) {
+//       res.status(400).json({ message: error.message })
+//   }
+// });
 
 
 //Get all Method

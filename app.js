@@ -9,8 +9,9 @@ var config = require('./config');
 var port = process.env.PORT || 3000;
 var indexRouter = require('./routes/index');
 
-console.log(config.mongodb);
-mongoose.connect(config.mongodb);
+// console.log(config.mongodb);
+// mongoose.connect(config.mongodb);
+mongoose.connect('mongodb://localhost/soulwallet');
 const database = mongoose.connection;
 database.on('error', (error) => {
     console.log(error)
