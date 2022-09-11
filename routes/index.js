@@ -37,10 +37,10 @@ router.post('/post', async (req, res) => {
   }
 });
 
-router.get('/add-user', async (req, res) => {
+router.post('/add-user', async (req, res) => {
   const user = new User({
-      email: req.query.email,
-      wallet_address: req.query.wallet_address
+      email: req.body.email,
+      wallet_address: req.body.wallet_address
   })
   try {
       const userToSave = await user.save();
