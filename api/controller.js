@@ -6,4 +6,18 @@ function verifyEmail(req,res,next){
     }
     return false;
 }
-module.exports = {verifyEmail};
+
+async function saveWalletAddress(req, rsp, next) {
+
+}
+
+async function addRecoveryRecord(req, rsp, next) {
+
+}
+
+async function fetchRecoveryRecords(req, rsp, next) {
+    
+}
+
+
+module.exports = { verifyEmail };

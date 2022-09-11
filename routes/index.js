@@ -3,8 +3,8 @@ var router = express.Router();
 var controller = require('../api/controller');
 var config = require('../config');
 
-const Model = require('../models/model');
 const User = require('../models/user');
+// const User = require('../models/user');
 
 // APIs for Chrome plugin 
 // 1. verify-email, input: email, output: random number(6) in mail.
@@ -23,9 +23,9 @@ router.get('/verify-email', controller.verifyEmail);
 
 // Post Method
 router.post('/post', async (req, res) => {
-  const data = new Model({
-      name: req.body.name,
-      age: req.body.age
+  const data = new User({
+      email: req.body.email,
+      wallet_address: req.body.wallet_address
   })
 
   try {
