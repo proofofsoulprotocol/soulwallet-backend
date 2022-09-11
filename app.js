@@ -22,22 +22,6 @@ database.once('connected', () => {
     console.log('Database Connected');
 });
 
-var Schema = mongoose.Schema;
-
-var blogSchema = new Schema({
-  title:  String,
-  author: String,
-  body:   String,
-  comments: [{ body: String, date: Date }],
-  date: { type: Date, default: Date.now },
-  hidden: Boolean,
-  meta: {
-    votes: Number,
-    favs:  Number
-  }
-});
-
-var app = express();
 
 // APIs for Chrome plugin 
 // 1. verifyEmail, input: email, output: random number(6) in mail.
@@ -85,34 +69,3 @@ var app = express();
 //       }
 //   ]
 // }
-
-
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-
-app.use('/', indexRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.json({});
-});
-
-var server = http.createServer(app)
-server.listen(port, () => {
-  console.log('Express server listening on port ' + port)
-})
