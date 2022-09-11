@@ -1,4 +1,4 @@
-function verifyEmail(req){
+function verifyEmail(req,res,next){
     json ={}
     if(req.query.email){
         res.json = {"data": "hello soulwallet! updated!"+ req.query.email};
@@ -6,4 +6,4 @@ function verifyEmail(req){
     }
     return false;
 }
-module.exports = [verifyEmail];
+module.exports = {verifyEmail};
