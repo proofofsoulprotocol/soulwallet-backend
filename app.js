@@ -10,7 +10,7 @@ var port = process.env.PORT || 3000;
 var indexRouter = require('./routes/index');
 
 const main = async () => {
-  console.log("mongodb uri: " + config.mongodbURI);
+  console.log("mongodb uri now: " + config.mongodbURI);
   await mongoose.connect(config.mongodbURI, config.mongodbConfig);
   console.log("database connected");
 
