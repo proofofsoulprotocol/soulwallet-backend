@@ -11,8 +11,9 @@ Also it contains the Security Center.
 + ``` npm install ``` to init
 + ``` npm start ``` to start express on port 3000
 + ``` npm test ``` to hot reload to dev
++ access 
 ```
-access 
+
 http://127.0.0.1:3000/get-all-user
 or
 http://127.0.0.1:3000/add-user?email=aa@bb.net&wallet_address=7788DLKJHFqweiid
