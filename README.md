@@ -10,4 +10,11 @@ Also it contains the Security Center.
 ## How to begin backend dev
 + ``` npm install ``` to init
 + ``` npm start ``` to start express on port 3000
-+ ``` access http://127.0.0.1:3000/queryGuardianStatus?email=aaa@aaa.com``` to test
++ ``` npm test ``` to hot reload to dev
+```
+access 
+http://127.0.0.1:3000/get-all-user
+or
+http://127.0.0.1:3000/add-user?email=aa@bb.net&wallet_address=7788DLKJHFqweiid
+
+``` to test
