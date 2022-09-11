@@ -15,6 +15,4 @@ if (config.env === "production") {
     config.mongodbConfig = {};
 }
 
-console.log("ENV",process.env.MONGODB_URI)
-
 module.exports = config;

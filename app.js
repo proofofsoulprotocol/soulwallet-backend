@@ -9,18 +9,40 @@ var config = require('./config');
 var port = process.env.PORT || 3000;
 var indexRouter = require('./routes/index');
 
-// console.log(config.mongodb);
-// mongoose.connect(config.mongodb);
-mongoose.connect('mongodb://localhost/soulwallet');
-// mongoose.connect("mongodb+srv://soulwalletbackend:X1SYvvRqLIRu8mVX@cluster0.b66i3qq.mongodb.net/?retryWrites=true&w=majority");
-const database = mongoose.connection;
+const main = async () => {
+  console.log("mongodb uri now: " + config.mongodbURI);
+  await mongoose.connect(config.mongodbURI, config.mongodbConfig);
+  console.log("database connected");
 
-database.on('error', (error) => {
-    console.log(error)
-});
-database.once('connected', () => {
-    console.log('Database Connected');
-});
+  var app = express();
+  app.use(logger('dev'));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
+  app.set('trust proxy', 2);
+
+  app.use('/', indexRouter);
+  app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
+
+  // error handler
+  app.use(function(err, req, res, next) {
+    // only providing error in development
+    res.status(err.status || 500);
+    res.json({
+      message: err.message,
+      error: config.env == 'development' ? err : {}
+    });
+  });
+
+  var server = http.createServer(app);
+  server.listen(port, () => {
+    console.log('Express server listening on port ' + port)
+  });
+};
+
+main();
+
+
 
 
 // APIs for Chrome plugin 
