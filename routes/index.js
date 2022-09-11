@@ -37,19 +37,19 @@ router.post('/post', async (req, res) => {
   }
 });
 
-// router.post('/addUser', async (req, res) => {
-//   const data = new User({
-//       email: req.body.email,
-//       wallet_address: req.body.wallet_address
-//   })
-//   try {
-//       const dataToSave = await data.save();
-//       res.status(200).json(dataToSave)
-//   }
-//   catch (error) {
-//       res.status(400).json({ message: error.message })
-//   }
-// });
+router.get('/add-user', async (req, res) => {
+  const user = new User({
+      email: req.query.email,
+      wallet_address: req.query.wallet_address
+  })
+  try {
+      const userToSave = await user.save();
+      res.status(200).json(userToSave)
+  }
+  catch (error) {
+      res.status(400).json({ message: error.message })
+  }
+});
 
 
 //Get all Method
