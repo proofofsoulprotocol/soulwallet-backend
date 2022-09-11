@@ -15,4 +15,10 @@ if (config.env === "production") {
     config.mongodbConfig = {};
 }
 
+console.log("ENV",process.env.MONGODB_URI)
+
+
+config.verifyExpireMinutes = 1;
+config.verifyMaxResend = 10;
+
 module.exports = config;

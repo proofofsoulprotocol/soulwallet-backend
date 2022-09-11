@@ -5,9 +5,10 @@ var logger = require('morgan');
 var http = require('http');
 var mongoose = require('mongoose');
 var config = require('./config');
+var indexRouter = require('./routes/index');
+const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 
 var port = process.env.PORT || 3000;
-var indexRouter = require('./routes/index');
 
 const main = async () => {
   console.log("mongodb uri now: " + config.mongodbURI);
@@ -21,8 +22,11 @@ const main = async () => {
   app.use(cookieParser());
   app.set('trust proxy', 2);
 
-  app.use('/', indexRouter);
+  app.post('/verify-email', verifyEmail);
+  app.post('/verify-email-num', verifyEmailNum);
+  app.post('/verify-email-exists', verifyEmailExists);
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
+  app.use('/', indexRouter);
 
   // error handler
   app.use(function(err, req, res, next) {
