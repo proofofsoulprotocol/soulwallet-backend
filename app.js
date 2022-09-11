@@ -12,7 +12,9 @@ var indexRouter = require('./routes/index');
 // console.log(config.mongodb);
 // mongoose.connect(config.mongodb);
 mongoose.connect('mongodb://localhost/soulwallet');
+// mongoose.connect("mongodb+srv://soulwalletbackend:X1SYvvRqLIRu8mVX@cluster0.b66i3qq.mongodb.net/?retryWrites=true&w=majority");
 const database = mongoose.connection;
+
 database.on('error', (error) => {
     console.log(error)
 });
@@ -20,6 +22,20 @@ database.once('connected', () => {
     console.log('Database Connected');
 });
 
+var Schema = mongoose.Schema;
+
+var blogSchema = new Schema({
+  title:  String,
+  author: String,
+  body:   String,
+  comments: [{ body: String, date: Date }],
+  date: { type: Date, default: Date.now },
+  hidden: Boolean,
+  meta: {
+    votes: Number,
+    favs:  Number
+  }
+});
 
 var app = express();
 
