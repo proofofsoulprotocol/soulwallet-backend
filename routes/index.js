@@ -16,27 +16,11 @@ const User = require('../models/user');
 // 7. add-guardians, input: email, guardian address, output: true or false
 
 router.get('/', function(req, res, next) {
-  res.json({"data": "hello soulwallet! updated!"});
+  res.json({"data": "Hello soulwallet! Welcome to here!"});
 });
 router.get('/verify-email', controller.verifyEmail);
 
-
-// Post Method
-router.post('/post', async (req, res) => {
-  const data = new User({
-      email: req.body.email,
-      wallet_address: req.body.wallet_address
-  })
-
-  try {
-      const dataToSave = await data.save();
-      res.status(200).json(dataToSave)
-  }
-  catch (error) {
-      res.status(400).json({ message: error.message })
-  }
-});
-
+// post to add
 router.post('/add-user', async (req, res) => {
   const user = new User({
       email: req.body.email,

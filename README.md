@@ -21,6 +21,9 @@ http://127.0.0.1:3000/add-user?email=aa@bb.net&wallet_address=7788DLKJHFqweiid
 ``` 
 to test
 
+### config notion
++ Edit the local .env, set parameters like env.example
+
 ## Docs
 + [Security center solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/security-center-solution.md)
 + [Social recovery solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/Social-recovery-solution.md)
