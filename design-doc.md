@@ -38,7 +38,13 @@ design doc
   { 
     "email": "testshuaishuai@gmail.com",
     "wallet-address": "a contract wallet address",
-    "guardians": [{"type":"EOA","address":"0xbDA5747bFD65F08deb54cb465eB87D40e51B197E"},{},{}],
+    "guardians": [
+        {
+            "type":"EOA",
+            "address":"0xbDA5747bFD65F08deb54cb465eB87D40e51B197E",
+            "signature": "LIJOEIUR09328049sjdijf" //data was signed
+        },
+        {},{}],
     <!-- "status": "created, activated, recovering, recovered" -->
   }
 ```
