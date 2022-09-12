@@ -32,7 +32,7 @@ design doc
 
 
 ## Collections(Objects)
-### Users
+### 1.Users
 + model/user.js
 ```
   { 
@@ -45,10 +45,15 @@ design doc
             "signature": "LIJOEIUR09328049sjdijf" //data was signed
         },
         {},{}],
+    "guardian-settings": {
+            "total": 5,
+            "min": 3,
+            "setting": "3/5"
+            }    
     <!-- "status": "created, activated, recovering, recovered" -->
   }
 ```
-### VerifyRecords
+### 2.VerifyRecords
 + model/verification.js
 ```
 {
@@ -57,7 +62,7 @@ design doc
     date: date type,
 }
 ```
-### Guardians
+### 3.Guardians
 + TODO
 + Guardians save in the users collection.
 + We will add Guardians obj in future for index from guardians view.
@@ -69,7 +74,7 @@ design doc
 }
 ```
 
-### RecoveryRecords
+### 4.RecoveryRecords
 ```
 recovery record structure
 {
@@ -78,14 +83,17 @@ recovery record structure
   recovery_records: [
       {
           guardian_address: "asdfadf23234233",
+          signature: "sdfasdlk98kkskdjf",
           sign_status: true
       },
       {
           guardian_address: "sdfk8878dglkdg0g",
+          signature: "sdfasdlk98kkskdjf",
           sign_status: false
       },
       {
           guardian_address: "ksjdlfj0808092834g",
+          signature: "sdfasdlk98kkskdjf",
           sign_status: false
       }
   ]
@@ -103,12 +111,13 @@ recovery record structure
 ```
 response return data structure 
 {   
-  method: triggerRecovery, 
-  code: 200, 
-  status : OK, 
-  params: {data structure},
+  <!-- method: triggerRecovery,  -->
+  code: 200, // 500,401..
+  status : OK, //Error
+  result: {
+    data structure //json obj
+    },
   msg: "msgs returned",
-  hash: hash
 }
 or
 {   
