@@ -1,21 +1,68 @@
 design doc
 ## Background
-+ Set the backend total technical environment .
++ Set the backend total technical design and environment.
 ## All functions
++ From design: 
++ [Security center solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/security-center-solution.md)
++ [Social recovery solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/Social-recovery-solution.md)
++ ![See the flow](recovery-sequence-diagram.png)
 ### APIs
 + APIs for Chrome plugin 
 + 1. verifyEmail, input: email, output: random number(6) in mail.
 + 2. verifyEmailNum, input: email, random number, output: true or false.
-+ 3. verifyOwnerMail, input email, output: true or false.
-+ 4. saveWalletAddress, input: email, wallet_address,[public-key(EOA address)], output: true or false.
-+ 5. addRecoveryRecord, input: email, wallet_address, output: true or false.
-+ 6. fetchRecoveryRecords, input: email, output: false or record structure.
++ 3. addUser, input: email, wallet_address(unique,not required), output: true or false; async invoke after finished the create account action with onchain contract.
++ 4. updateUserGuardian, input: email, guardians, output: true or false; async invoke after finished the setting guardian action with onchain contract.
++ 5. updateUserAccount, input: email, wallet_address(unique, required), output: true or false; async invoke after finished the activating account action with onchain contract.
++ 6. isWalletOwner, input email, output: true or false.
++ 7. addRecoveryRecord, input: email, wallet_address, output: true or false.
++ 8. fetchRecoveryRecords, input: email, output: false or record structure.
++ 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after sign onchain, async invoke this method to mark specific guardian has signed.
++ 10. getGuardiansWallet
++ 11. getWalletsRecoveryRecords
++ 12. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the User object or a individual setting Object, to be discussed. input: email, output: User obj or setting obj.
++ 
+```
+{
+    "total": 5,
+    "min": 3,
+    "setting": "3/5"
+}
+```
++ 
 
 
 ## Collections(Objects)
 ### Users
++ model/user.js
+```
+  { 
+    "email": "testshuaishuai@gmail.com",
+    "wallet-address": "a contract wallet address",
+    "guardians": [{"type":"EOA","address":"0xbDA5747bFD65F08deb54cb465eB87D40e51B197E"},{},{}],
+    <!-- "status": "created, activated, recovering, recovered" -->
+  }
+```
 ### VerifyRecords
++ model/verification.js
+```
+{
+    email: "aa@aa.net",
+    code: "234567",
+    date: date type,
+}
+```
 ### Guardians
++ TODO
++ Guardians save in the users collection.
++ We will add Guardians obj in future for index from guardians view.
++ 
+```
+{
+    guardian_address: "asdf234gg",
+    wallet_address: [asdfadf,123123,23213,2323]
+}
+```
+
 ### RecoveryRecords
 ```
 recovery record structure
