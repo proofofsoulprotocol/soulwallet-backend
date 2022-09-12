@@ -45,7 +45,7 @@ design doc
             "signature": "LIJOEIUR09328049sjdijf" //data was signed
         },
         {},{}],
-    "guardian-settings": {
+    "guardian-settings": { //sync with onchain data cycle time.
             "total": 5,
             "min": 3,
             "setting": "3/5"
