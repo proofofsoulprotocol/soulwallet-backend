@@ -7,12 +7,16 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var indexRouter = require('./routes/index');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
+const Account = require('./models/account');
+const Verification = require('./models/verification');
 const {addAccount, updateAccountGuardian, updateAccount, isWalletOwner} = require('./api/account');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
   console.log("mongodb uri now: " + config.mongodbURI);
   await mongoose.connect(config.mongodbURI, config.mongodbConfig);
+  Account.ensureIndexes();
+  Verification.ensureIndexes();
   console.log("database connected");
 
   var app = express();
