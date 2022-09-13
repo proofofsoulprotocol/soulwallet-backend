@@ -9,7 +9,7 @@ var indexRouter = require('./routes/index');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const Account = require('./models/account');
 const Verification = require('./models/verification');
-
+const {addAccount, updateAccountGuardian, updateAccount, isWalletOwner} = require('./api/account');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
@@ -29,6 +29,11 @@ const main = async () => {
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
+
+  app.post('/add-account', addAccount);
+  app.post('/is-owner', isWalletOwner);
+  app.post('/update-account', updateAccount);
+
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
 

@@ -20,10 +20,13 @@ design doc
 + ------
 + 7. addRecoveryRecord, input: email, wallet_address, output: true or false.
 + 8. fetchRecoveryRecords, input: email, output: false or record structure.
-+ 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after sign onchain, async invoke this method to mark specific guardian has signed.
-+ 10. getGuardiansWallet
-+ 11. getWalletsRecoveryRecords
-+ 12. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. input: email, output: Account obj or setting obj.
++ 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after signed onchain, async invoke this method to mark specific guardian has signed.
++ -----------
++ Xuri will finish it.
+<!-- + 10. getGuardiansWallet, todo, finish later. -->
++ 10. getWalletsRecoveryRecords, get a guardian wallet's recovery records. input wallet_address, output: recovery records array(to be discussed) .
++ 11. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. 
++ input: email, output: Account obj or setting obj.
 + The structure behind will be stored in Account obj.
 ```
 {
@@ -32,7 +35,7 @@ design doc
     "setting": "3/5"
 }
 ```
-+ 13. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?: 
++ 12. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?: 
 + 
 ```
 {
@@ -42,7 +45,9 @@ design doc
 ```
 + we have two method to trigger the recovery contract invoke, it depends on the wallet contract's gas fee pay method. One is the last signed guardian? or the security center keeping calculate if has enough signature are collected, and then notify the chrome plugin to invoke the recovery contract, all gas problem be resolved by paymaster, because of the chrome plugin is pending on recovery and the security center has no so much money to pay all recoveries. So triggerRecovery return true or false, then chrome plugin or security center call the paymaster to begin the contract's replace key method.
 
-+ 14. clearRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
++ 13. clearRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
++ --------
++ To be discussed.
 
 
 ## Collections(Objects)
@@ -58,15 +63,21 @@ design doc
             "address":"0xbDA5747bFD65F08deb54cb465eB87D40e51B197E",
             "signature": "LIJOEIUR09328049sjdijf" //data was signed
         },
-        {},{}],
-    "guardian-settings": { //sync with onchain data cycle time.
-            "total": 5,
-            "min": 3,
-            "setting": "3/5"
-            }    
+        {},{}],   
     <!-- "status": "created, activated, recovering, recovered" -->
   }
 ```
+### 1.1 Guardian_settings
+```
+{
+    "email": "aaa@bbb.net", //sync with onchain data cycle time.
+    "wallet_address": "sdkfjsdf9879",
+    "total": 5,
+    "min": 3,
+    "has_default": true, //if has set a SoulWallet default guardian
+    "setting": "3/5"
+} 
+```            
 ### 2.VerifyRecords
 + model/verify-records.js
 ```
@@ -78,7 +89,7 @@ design doc
 ```
 ### 3.Guardians
 + TODO
-+ Guardians save in the Accounts collection.
+<!-- + Guardians save in the Accounts collection. -->
 + We will add Guardians obj in future for index from guardians view.
 + 
 ```
