@@ -1,77 +1,49 @@
-var Account = require("../models/account");
-const { validateEmail, sendVerifyCode } = require("../utils/email-utils");
-var commUtils = require("../utils/comm-utils");
-const Verification = require("../models/verification");
-const config = require("../config");
-const crypto = require("crypto");
+const RecoveryRecord = require("../models/recovery-record");
+const commUtils = require("../utils/comm-utils");
 
-const randomVerifyCode = (length = 6) => {
-    const givenSet = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
-    var code = "";
-    for (var i = 0; i < length; i++) {
-        code += givenSet[crypto.randomInt(0, givenSet.length)];
-    }
-    return code;
-}
+async function addRecoveryRecord(req, rsp, next) {
+    // TODO: check params
 
-async function verifyEmail(req, rsp, next) {
-    if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
-    }
-
-    // 1. send limit
-    const result = await Verification.find({ email: req.body.email});
-    if (result.length > config.verifyMaxResend) {
-        return commUtils.errRsp(rsp, 429, "too many send of current email");
-    }
-
-    // 2. generate random code
-    const code = randomVerifyCode();
-
-    // 3. save code
-    const verification = Verification({
-        email: req.body.email,
-        code: code,
-        date: new Date()
+    const result = await RecoveryRecord.findOneAndUpdate({
+        wallet_address: req.body.wallet_address
+    }, {}, {
+        new: true,
+        upsert: true
     });
-    await verification.save();
 
-    // 4. send code
-    await sendVerifyCode(req.body.email, code);
+    // TODO: this is not atomic
+    updated = false;
+    for (var i = 0; i < result.recovery_records.length; i++) {
+        if (result.recovery_records[i].guardian_address === req.body.guardian_address) {
+            // update signature
+            result.recovery_records[i].signature = req.body.signature;
+        }
+    }
+    if (!updated) {
+        result.recovery_records.push({
+            guardian_address: req.body.guardian_address,
+            signature: req.body.signature
+        })
+    }
+    await result.save();
 
     return commUtils.succRsp(rsp, {
-        email: req.body.email
+        record: result
     })
 }
 
-async function verifyEmailNum(req, rsp, next) {
-    if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+
+async function fetchRecoveryRecords(req, rsp, next) {
+    const result = await RecoveryRecord.findOne({
+        wallet_address: req.body.wallet_address
+    });
+    if (!result) {
+        return commUtils.errRsp(rsp, 404, "wallet address not found");
     }
 
-    if (typeof req.body.code !== 'string') {
-        return commUtils.errRsp(rsp, 400, "empty code");
-    }
-    const code = req.body.code.toUpperCase();
-
-    const result = await Verification.find({email: req.body.email, code: code});
-    // TODO: set jwt
     return commUtils.succRsp(rsp, {
-        verified: result.length > 0
+        recovery_records: result.recovery_records
     });
 }
 
-async function verifyEmailExists(req, rsp, next) {
-  var exists = false;
-  const result = await Account.find({email: req.body.email});
-  if (result.length > 0) {
-    exists = true;
-  }
-  rsp.json({
-    params: req.body,
-    exists: exists
-  })
-}
-
-
-module.exports = {verifyEmail, verifyEmailNum, verifyEmailExists};
+module.exports = {addRecoveryRecord, fetchRecoveryRecords};

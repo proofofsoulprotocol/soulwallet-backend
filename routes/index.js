@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../api/controller');
 var config = require('../config');
-
+const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('../api/verify');
+const { addRecoveryRecord, fetchRecoveryRecords } = require("../api/recovery-records")
 const Account = require('../models/account');
 
 router.get('/', function(req, res, next) {
   res.json({"data": "Hello soulwallet! Welcome to here!"});
 });
-// 
-// router.get('/verify-email', controller.verifyEmail);
+
 
 // post to add
 router.post('/add-account', async (req, res) => {
