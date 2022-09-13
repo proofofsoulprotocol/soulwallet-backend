@@ -14,9 +14,9 @@ Also it contains the Security Center.
 + access 
 ```
 
-http://127.0.0.1:3000/get-all-user
+http://127.0.0.1:3000/get-all-account
 or
-http://127.0.0.1:3000/add-user?email=aa@bb.net&wallet_address=7788DLKJHFqweiid
+http://127.0.0.1:3000/add-account?email=aa@bb.net&wallet_address=7788DLKJHFqweiid
 
 ``` 
 to test

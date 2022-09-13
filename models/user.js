@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.set('bufferCommands', false);
 
-const userSchema = new mongoose.Schema({
+const accountSchema = new mongoose.Schema({
     email: {
         required: true,
         type: String,
@@ -20,4 +20,4 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Account', accountSchema);

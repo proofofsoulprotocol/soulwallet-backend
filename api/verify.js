@@ -1,4 +1,4 @@
-var User = require("../models/user");
+var Account = require("../models/account");
 const { validateEmail, sendVerifyCode } = require("../utils/email-utils");
 var commUtils = require("../utils/comm-utils");
 const Verification = require("../models/verification");
@@ -63,7 +63,7 @@ async function verifyEmailNum(req, rsp, next) {
 
 async function verifyEmailExists(req, rsp, next) {
   var exists = false;
-  const result = await User.find({email: req.body.email});
+  const result = await Account.find({email: req.body.email});
   if (result.length > 0) {
     exists = true;
   }
