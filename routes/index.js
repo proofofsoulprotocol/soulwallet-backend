@@ -17,7 +17,13 @@ const Account = require('../models/account');
 router.get('/', function(req, res, next) {
   res.json({"data": "Hello soulwallet! Welcome to here!"});
 });
-router.get('/verify-email', controller.verifyEmail);
+// 
+// router.get('/verify-email', controller.verifyEmail);
+router.get('/verify-email', function(req, res, next) {
+  console.log("here111");
+  controller.verifyEmail(req, res);
+  // res.json({"data": "Hello soulwallet! Welcome to here!"});
+});
 
 // post to add
 router.post('/add-account', async (req, res) => {

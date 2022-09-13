@@ -1,4 +1,5 @@
-function verifyEmail(req,res,next){
+async function verifyEmail(req,res,next){
+    console.log("vm:");
     json ={}
     if(req.query.email){
         res.json = {"data": "hello soulwallet! updated!"+ req.query.email};

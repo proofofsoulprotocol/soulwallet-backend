@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var indexRouter = require('./routes/index');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
-
+const {addAccount, updateAccountGuardian, updateAccount, isWalletOwner} = require('./api/account');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
