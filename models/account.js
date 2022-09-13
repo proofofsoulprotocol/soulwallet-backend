@@ -9,14 +9,14 @@ const accountSchema = new mongoose.Schema({
         unique: true
     },
     wallet_address: {
-        required: true,
+        required: false,
         type: String,
         index: true,
         unique: true,
     },
-    key: {
+    guardians: {
         required: false,
-        type: String
+        type: Array
     }
 })
 

@@ -1,16 +1,14 @@
 var Account = require("../models/account");
 var commUtils = require("../utils/comm-utils");
+const { validateEmail} = require("../utils/email-utils");
 const config = require("../config");
 // const crypto = require("crypto");
 // addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
-const findAccount = (options) => {
-    const givenSet = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
-    var code = "";
-    for (var i = 0; i < length; i++) {
-        code += givenSet[crypto.randomInt(0, givenSet.length)];
-    }
-    return code;
+async function findAccount(mail) {
+    
+    const result = await Account.find({email: mail });
+    return result;
 }
 
 async function addAccount(req, rsp, next) {
@@ -18,15 +16,19 @@ async function addAccount(req, rsp, next) {
         return commUtils.errRsp(rsp, 400, "invalid email");
     }
 
-    if (typeof req.body.code !== 'string') {
-        return commUtils.errRsp(rsp, 400, "empty code");
+    const account = new Account({
+        email: req.body.email,
+        wallet_address: req.body.wallet_address
+    })
+    var msg = "Add record successfully.";
+    try {
+        const accountToSave = await account.save();
     }
-    const code = req.body.code.toUpperCase();
-
-    const result = await Verification.find({email: req.body.email, code: code});
-    // TODO: set jwt
+    catch (error) {
+        msg="Save record error"
+    }
     return commUtils.succRsp(rsp, {
-        verified: result.length > 0
+        message: msg
     });
 }
 
@@ -43,14 +45,17 @@ async function updateAccountGuardian(req, rsp, next) {
 }
 
 async function updateAccount(req, rsp, next) {
-    var exists = false;
-    const result = await Account.find({email: req.body.email});
-    if (result.length > 0) {
-      exists = true;
+    var updated = false;
+    const account = await Account.find({email: req.body.email});
+    console.log(account);
+    if (account.length > 0) {
+        updated = true;
+        account[0].wallet_address = req.body.wallet_address; // one email force one wallet address
+        account[0].save();
     }
     rsp.json({
       params: req.body,
-      exists: exists
+      update: updated
     })
   }
 

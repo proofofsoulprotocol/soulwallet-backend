@@ -25,6 +25,11 @@ const main = async () => {
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
+
+  app.post('/add-account', addAccount);
+  app.post('/is-owner', isWalletOwner);
+  app.post('/update-account', updateAccount);
+
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
 
