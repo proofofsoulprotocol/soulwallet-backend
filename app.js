@@ -6,17 +6,20 @@ var http = require('http');
 var mongoose = require('mongoose');
 var config = require('./config');
 var indexRouter = require('./routes/index');
-const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const Account = require('./models/account');
 const Verification = require('./models/verification');
+const RecoveryRecord = require('./models/recovery-record');
+const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
+const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
 const {addAccount, updateAccountGuardian, updateAccount, isWalletOwner} = require('./api/account');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
   console.log("mongodb uri now: " + config.mongodbURI);
   await mongoose.connect(config.mongodbURI, config.mongodbConfig);
-  Account.ensureIndexes();
-  Verification.ensureIndexes();
+  await Account.ensureIndexes();
+  await Verification.ensureIndexes();
+  await RecoveryRecord.ensureIndexes();
   console.log("database connected");
 
   var app = express();
@@ -26,13 +29,19 @@ const main = async () => {
   app.use(cookieParser());
   app.set('trust proxy', 2);
 
+  // verify
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
 
+  // acount
   app.post('/add-account', addAccount);
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount);
+
+  // recovery record
+  app.post('/add-recovery-record', addRecoveryRecord);
+  app.post('/fetch-recovery-records', fetchRecoveryRecords);
 
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);

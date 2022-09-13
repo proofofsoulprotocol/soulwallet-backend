@@ -5,7 +5,7 @@ const verificationSchema = new mongoose.Schema({
     email: {
         required: true,
         type: String,
-        // index: true
+        index: true
     },
     code: {
         require: true,
@@ -19,7 +19,5 @@ const verificationSchema = new mongoose.Schema({
         expires: config.verifyExpireMinutes * 60
     }
 });
-
-// verificationSchema.index({ date: 1 }, { expireAfterSeconds: config.verifyExpireMinutes * 60 });
 
 module.exports = mongoose.model('Verification', verificationSchema);
