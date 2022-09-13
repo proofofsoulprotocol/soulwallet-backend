@@ -13,7 +13,7 @@ design doc
 + Xuri finished in verify.js
 + -----
 + 3. addAccount, input: email, wallet_address(unique,not required), output: true or false; async invoke after finished the create account action with onchain contract.
-+ 4. updateUserGuardian, input: email, guardians, output: true or false; async invoke after finished the setting guardian action with onchain contract.
++ 4. updateAccountGuardian, input: email, guardians, output: true or false; async invoke after finished the setting guardian action with onchain contract.
 + 5. updateAccount, input: email, wallet_address(unique, required), output: true or false; async invoke after finished the activating account action with onchain contract.
 + 6. isWalletOwner, input email, output: true or false.
 + Jhf finished in account.js
@@ -23,8 +23,8 @@ design doc
 + 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after sign onchain, async invoke this method to mark specific guardian has signed.
 + 10. getGuardiansWallet
 + 11. getWalletsRecoveryRecords
-+ 12. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the User object or a individual setting Object, to be discussed. input: email, output: User obj or setting obj.
-+ The structure behind will be stored in User obj.
++ 12. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. input: email, output: Account obj or setting obj.
++ The structure behind will be stored in Account obj.
 ```
 {
     "total": 5,
@@ -46,8 +46,8 @@ design doc
 
 
 ## Collections(Objects)
-### 1.Users
-+ model/user.js
+### 1.Accounts
++ model/account.js
 ```
   { 
     "email": "testshuaishuai@gmail.com",
@@ -78,7 +78,7 @@ design doc
 ```
 ### 3.Guardians
 + TODO
-+ Guardians save in the users collection.
++ Guardians save in the Accounts collection.
 + We will add Guardians obj in future for index from guardians view.
 + 
 ```
