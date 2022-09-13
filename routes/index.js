@@ -3,8 +3,7 @@ var router = express.Router();
 var controller = require('../api/controller');
 var config = require('../config');
 
-const User = require('../models/user');
-// const User = require('../models/user');
+const Account = require('../models/account');
 
 // APIs for Chrome plugin 
 // 1. verify-email, input: email, output: random number(6) in mail.
@@ -21,14 +20,14 @@ router.get('/', function(req, res, next) {
 router.get('/verify-email', controller.verifyEmail);
 
 // post to add
-router.post('/add-user', async (req, res) => {
-  const user = new User({
+router.post('/add-account', async (req, res) => {
+  const account = new Account({
       email: req.body.email,
       wallet_address: req.body.wallet_address
   })
   try {
-      const userToSave = await user.save();
-      res.status(200).json(userToSave)
+      const accountToSave = await account.save();
+      res.status(200).json(accountToSave)
   }
   catch (error) {
       res.status(400).json({ message: error.message })
@@ -37,9 +36,9 @@ router.post('/add-user', async (req, res) => {
 
 
 //Get all Method
-router.get('/get-all-user', async (req, res, next) => {
+router.get('/get-all-account', async (req, res, next) => {
   try {
-      const data = await User.find();
+      const data = await Account.find();
       res.json(data)
   }
   catch (error) {
