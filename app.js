@@ -44,7 +44,7 @@ const main = async () => {
   app.post('/get-account-guardian', getAccountGuardian); // get a array obj
   app.post('/update-account-guardian', updateAccountGuardian);// replace old one with new
 
-  // guardian
+  // guardian-setting
   app.post('/add-guardian-setting',addGuardianSetting);
   app.post('/update-guardian-setting',updateGuardianSetting);
 
