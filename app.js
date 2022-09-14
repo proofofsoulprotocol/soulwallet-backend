@@ -40,8 +40,14 @@ const main = async () => {
   app.post('/add-account', addAccount);
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount); //update account's wallet_address and guardians
+
+  app.post('/add-account-guardian', addAccountGuardian);
+  app.post('/get-account-guardian', getAccountGuardian);
+  app.post('/update-account-guardian', updateAccountGuardian);
+
+  // guardian
   app.post('/add-guardian-setting',addGuardianSetting);
-  app.post('/update-guardian-setting',updateGuardianSetting)
+  app.post('/update-guardian-setting',updateGuardianSetting);
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord);
@@ -49,7 +55,7 @@ const main = async () => {
 
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
-
+  console.log("ENV:",process.env.MONGODB_URI)
   // error handler
   app.use(function(err, req, res, next) {
     // only providing error in development

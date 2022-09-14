@@ -72,4 +72,5 @@ async function updateAccount(req, rsp, next) {
   }
 
 
-module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
+// module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
+module.exports = {addAccount, updateAccount, isWalletOwner};

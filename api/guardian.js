@@ -1,7 +1,7 @@
-var Account = require("../models/account");
+var Account = require("../models/guardian");
 var commUtils = require("../utils/comm-utils");
 const { validateEmail} = require("../utils/email-utils");
-const config = require("../config");
+// const config = require("../config");
 
 
 async function getAccountGuardian(req, rsp, next) {
