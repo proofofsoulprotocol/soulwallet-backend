@@ -94,14 +94,27 @@ async function updateAccount(req, rsp, next) {
 
 
 async function updateAccountGuardian(req, rsp, next) {
-  var exists = false;
-  const result = await Account.find({email: req.body.email});
-  if (result.length > 0) {
-    exists = true;
+  const account = await Account.findOne({email: req.body.email});
+  var msg = "";
+  if (account === null) {
+    msg = "Has no record of your mail:"+req.body.email;
+  }
+  var gIndex = (account.guardians).indexOf(req.body.guardian_old);
+  var gIndex2 = (account.guardians).indexOf(req.body.guardian_new);
+  if(gIndex2>-1){
+    msg ="The guardian "+req.body.guardian_new+ " you want to add has exists in your guardian list."
+  }
+  console.log("old,new,index",req.body.guardian_old, account.guardians, gIndex);
+  console.log("new guardian in guardians' gIndex2",gIndex2);
+  if((gIndex>-1)&(gIndex2===null)){
+    account.guardians[gIndex]= req.body.guardian_new;
+    msg = "Replace the old:"+req.body.guardian_old+" with "+req.body.guardian_new;
+    var replace = await account.save();
+    console.log("replace:",replace);
   }
   rsp.json({
-    params: req.body,
-    exists: exists
+    params: req.body.guardian_new,
+    Msg: msg
   })
 }
 
