@@ -13,6 +13,7 @@ const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify
 const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
 const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
+const GuardianSetting = require('./models/guardian-setting');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
@@ -21,6 +22,7 @@ const main = async () => {
   await Account.ensureIndexes();
   await Verification.ensureIndexes();
   await RecoveryRecord.ensureIndexes();
+  await GuardianSetting.ensureIndexes();
   console.log("database connected");
 
   var app = express();
