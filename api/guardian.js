@@ -50,4 +50,4 @@ async function updateAccountGuardian(req, rsp, next) {
 }
 
 
-module.exports = {getAccountGuardian, addAccountGuardian, updateAccountGuardian};
+module.exports = {};

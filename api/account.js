@@ -71,7 +71,7 @@ async function updateAccount(req, rsp, next) {
     })
   }
 
-  async function adddAccountGuardian(req, rsp, next) {
+  async function addAccountGuardian(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.errRsp(rsp, 400, "invalid email");
     }
@@ -93,6 +93,31 @@ async function updateAccount(req, rsp, next) {
 }
 
 
+async function updateAccountGuardian(req, rsp, next) {
+  var exists = false;
+  const result = await Account.find({email: req.body.email});
+  if (result.length > 0) {
+    exists = true;
+  }
+  rsp.json({
+    params: req.body,
+    exists: exists
+  })
+}
+
+async function getAccountGuardian(req, rsp, next) {
+  var exists = false;
+  const result = await Account.find({email: req.body.email});
+  if (result.length > 0) {
+    exists = true;
+  }
+  rsp.json({
+    params: req.body,
+    exists: exists
+  })
+}
+
+
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner, adddAccountGuardian};
+module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, updateAccountGuardian};
