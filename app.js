@@ -11,7 +11,8 @@ const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
-const {addAccount, updateAccountGuardian, updateAccount, isWalletOwner} = require('./api/account');
+const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
+const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 var port = process.env.PORT || 3000;
 
 const main = async () => {
@@ -37,7 +38,15 @@ const main = async () => {
   // acount
   app.post('/add-account', addAccount);
   app.post('/is-owner', isWalletOwner);
-  app.post('/update-account', updateAccount);
+  app.post('/update-account', updateAccount); //update account's wallet_address and guardians
+  // acount guardian
+  app.post('/add-account-guardian', addAccountGuardian); // add new one, unique
+  app.post('/get-account-guardian', getAccountGuardian); // get a array obj
+  app.post('/update-account-guardian', updateAccountGuardian);// replace old one with new
+
+  // guardian
+  app.post('/add-guardian-setting',addGuardianSetting);
+  app.post('/update-guardian-setting',updateGuardianSetting);
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord);
@@ -45,7 +54,7 @@ const main = async () => {
 
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
-
+  console.log("ENV:",process.env.MONGODB_URI)
   // error handler
   app.use(function(err, req, res, next) {
     // only providing error in development
