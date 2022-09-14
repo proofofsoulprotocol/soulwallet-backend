@@ -71,6 +71,28 @@ async function updateAccount(req, rsp, next) {
     })
   }
 
+  async function adddAccountGuardian(req, rsp, next) {
+    if (!validateEmail(req.body.email)) {
+        return commUtils.errRsp(rsp, 400, "invalid email");
+    }
+    var guardian = req.body.guardian;
+    console.log("guardian will be added:",guardian);
+    var msg = "Add guardian successfully.";
+    try {
+      const update_guardian = await Account.findOneAndUpdate({email: req.body.email, wallet_address: req.body.wallet_address}, {$addToSet:{guardians: guardian}});
+      console.log("Error Obj:",update_guardian);
+    }
+    catch (error) {
+        msg="Add guardian record error";
+        console.log("Error Obj:",update_guardian);
+        console.log("Msg",msg);
+    }
+    return commUtils.succRsp(rsp, {
+        message: msg
+    });
+}
+
+
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner};
+module.exports = {addAccount, updateAccount, isWalletOwner, adddAccountGuardian};

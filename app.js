@@ -11,7 +11,7 @@ const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
-const {addAccount, updateAccount, isWalletOwner} = require('./api/account');
+const {addAccount, updateAccount, isWalletOwner, adddAccountGuardian} = require('./api/account');
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {getAccountGuardian, addAccountGuardian, updateAccountGuardian} = require('./api/guardian');
 var port = process.env.PORT || 3000;
@@ -41,7 +41,7 @@ const main = async () => {
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount); //update account's wallet_address and guardians
 
-  app.post('/add-account-guardian', addAccountGuardian);
+  app.post('/addd-account-guardian', adddAccountGuardian);
   app.post('/get-account-guardian', getAccountGuardian);
   app.post('/update-account-guardian', updateAccountGuardian);
 

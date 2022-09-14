@@ -159,5 +159,17 @@ or
 
 ```
 
+### Design logic
+#### Scenarios or User Case
++ All products want to resolve some questions happening in different scenarios.
++ We define 3 Scenarios in PoC: Create\Activate\Recovery
+#### Main Objects
++ All scenarios are different Business Object and their relations weaving together.
++ We have 3 BO: Account, Guardians, Recovery Records, accumulate all the scenarios data.
+
+#### Main APIs
++ All APIs are relations and actions between BOs.
++ We have about 13 methods above.
+
 
 
