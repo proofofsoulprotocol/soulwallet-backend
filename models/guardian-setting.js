@@ -7,8 +7,8 @@ const guardianSettingSchema = new mongoose.Schema({
         type: String,
         index: true,
         unique: true
-    }, //maybe EOA wallet or Email? twitter? contract wallet address?
-    wallet_addresses: {
+    }, 
+    wallet_addresses: {//maybe EOA wallet or Email? twitter? contract wallet address?
         required: false,
         type: String,
         index: true,

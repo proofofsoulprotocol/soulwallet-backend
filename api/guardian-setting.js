@@ -1,39 +1,33 @@
-var Account = require("../models/account");
+var GuardianSetting = require("../models/guardian-setting");
 var commUtils = require("../utils/comm-utils");
 const { validateEmail} = require("../utils/email-utils");
-const config = require("../config");
+// const config = require("../config");
 
 async function addGuardianSetting(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.errRsp(rsp, 400, "invalid email");
     }
 
-    const account = new Account({
+    const guardian_setting = new GuardianSetting({
         email: req.body.email,
-        wallet_address: req.body.wallet_address
+        wallet_address: req.body.wallet_address,
+        total: req.body.total,
+        min  : req.body.min,
+        has_default: req.body.has_default,
+        setting: req.body.setting
     })
     var msg = "Add record successfully.";
     try {
-        const accountToSave = await account.save();
+        const gsToSave = await guardian_setting.save();
+        console.log("save guardian setting:",gsToSave);
     }
     catch (error) {
-        msg="Save record error"
+        msg="Save record error";
+        console.log("Error:",error);
     }
     return commUtils.succRsp(rsp, {
         message: msg
     });
-}
-
-async function updateAccountGuardian(req, rsp, next) {
-  var exists = false;
-  const result = await Account.find({email: req.body.email});
-  if (result.length > 0) {
-    exists = true;
-  }
-  rsp.json({
-    params: req.body,
-    exists: exists
-  })
 }
 
 async function updateGuardianSetting(req, rsp, next) {
