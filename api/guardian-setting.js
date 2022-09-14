@@ -2,16 +2,8 @@ var Account = require("../models/account");
 var commUtils = require("../utils/comm-utils");
 const { validateEmail} = require("../utils/email-utils");
 const config = require("../config");
-// const crypto = require("crypto");
-// addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
-async function findAccount(mail) {
-    
-    const result = await Account.find({email: mail });
-    return result;
-}
-
-async function addAccount(req, rsp, next) {
+async function addGuardianSetting(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.errRsp(rsp, 400, "invalid email");
     }
@@ -32,19 +24,19 @@ async function addAccount(req, rsp, next) {
     });
 }
 
-// async function updateAccountGuardian(req, rsp, next) {
-//   var exists = false;
-//   const result = await Account.find({email: req.body.email});
-//   if (result.length > 0) {
-//     exists = true;
-//   }
-//   rsp.json({
-//     params: req.body,
-//     exists: exists
-//   })
-// }
+async function updateAccountGuardian(req, rsp, next) {
+  var exists = false;
+  const result = await Account.find({email: req.body.email});
+  if (result.length > 0) {
+    exists = true;
+  }
+  rsp.json({
+    params: req.body,
+    exists: exists
+  })
+}
 
-async function updateAccount(req, rsp, next) {
+async function updateGuardianSetting(req, rsp, next) {
     var updated = false;
     const account = await Account.find({email: req.body.email});
     console.log(account);
@@ -59,17 +51,5 @@ async function updateAccount(req, rsp, next) {
     })
   }
 
-  async function isWalletOwner(req, rsp, next) {
-    var exists = false;
-    const result = await Account.find({email: req.body.email});
-    if (result.length > 0) {
-      exists = true;
-    }
-    rsp.json({
-      params: req.body,
-      exists: exists
-    })
-  }
 
-
-module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
+module.exports = {addGuardianSetting, updateGuardianSetting};

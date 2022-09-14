@@ -77,7 +77,9 @@ design doc
     "has_default": true, //if has set a SoulWallet default guardian
     "setting": "3/5"
 } 
-```            
+```    
++ Belongs to account area, add-guardian-setting, update-guardian-setting
++ Jhf finished in guardian-setting.js        
 ### 2.VerifyRecords
 + model/verify-records.js
 ```
@@ -88,7 +90,7 @@ design doc
 }
 ```
 ### 3.Guardians
-+ TODO
++ Model: guardian.js
 <!-- + Guardians save in the Accounts collection. -->
 + We will add Guardians obj in future for index from guardians view.
 + 
