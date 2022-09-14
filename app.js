@@ -34,15 +34,15 @@ const main = async () => {
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
-  
+
   // acount
   app.post('/add-account', addAccount);
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount); //update account's wallet_address and guardians
   // acount guardian
-  app.post('/add-account-guardian', addAccountGuardian);
-  app.post('/get-account-guardian', getAccountGuardian);
-  app.post('/update-account-guardian', updateAccountGuardian);
+  app.post('/add-account-guardian', addAccountGuardian); // add new one, unique
+  app.post('/get-account-guardian', getAccountGuardian); // get a array obj
+  app.post('/update-account-guardian', updateAccountGuardian);// replace old one with new
 
   // guardian
   app.post('/add-guardian-setting',addGuardianSetting);

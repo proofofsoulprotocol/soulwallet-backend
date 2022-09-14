@@ -82,7 +82,7 @@ async function updateAccount(req, rsp, next) {
       const update_guardian = await Account.findOneAndUpdate({email: req.body.email, wallet_address: req.body.wallet_address}, {$addToSet:{guardians: guardian}});
       console.log("Error Obj:",update_guardian);
     }
-    catch (error) {
+    catch (error) { // has some problems on return msgs
         msg="Add guardian record error";
         console.log("Error Obj:",update_guardian);
         console.log("Msg",msg);
@@ -106,14 +106,16 @@ async function updateAccountGuardian(req, rsp, next) {
 }
 
 async function getAccountGuardian(req, rsp, next) {
-  var exists = false;
-  const result = await Account.find({email: req.body.email});
-  if (result.length > 0) {
-    exists = true;
+  const result = await Account.findOne({email: req.body.email});
+  var msg = "";
+  if (result === null) {
+    msg = "Has no record of your mail:"+req.body.email;
   }
+  rtData = result ? result.guardians : null ;
+  console.log("rtData:",rtData);
   rsp.json({
-    params: req.body,
-    exists: exists
+    params: rtData,
+    Msg: msg
   })
 }
 
