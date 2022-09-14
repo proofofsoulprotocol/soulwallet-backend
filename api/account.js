@@ -77,16 +77,34 @@ async function updateAccount(req, rsp, next) {
     }
     var guardian = req.body.guardian;
     console.log("guardian will be added:",guardian);
-    var msg = "Add guardian successfully.";
-    try {
+
+    const account = await Account.findOne({email: req.body.email, wallet_address: req.body.wallet_address});
+    var msg = "";
+    if (account === null) {
+      msg = "Has no record of your mail and wallet_address:"+req.body.email+":::"+ req.body.wallet_address;
+      return commUtils.succRsp(rsp, {
+        message: msg
+    });
+    }
+    console.log("account guardian is ",account.guardians);
+    var gIndex = (account.guardians).indexOf(req.body.guardian);
+    if(gIndex>-1){
+      msg ="The guardian "+req.body.guardian+ " you want to add has exists in your guardian list."
+      return commUtils.succRsp(rsp, {
+        message: msg
+    });  
+    }
+    msg = "Add guardian successfully.";
+    try { // maybe can improved and refactor
       const update_guardian = await Account.findOneAndUpdate({email: req.body.email, wallet_address: req.body.wallet_address}, {$addToSet:{guardians: guardian}});
-      console.log("Error Obj:",update_guardian);
+      console.log("update result:",update_guardian);
     }
     catch (error) { // has some problems on return msgs
         msg="Add guardian record error";
         console.log("Error Obj:",update_guardian);
         console.log("Msg",msg);
     }
+    console.log();
     return commUtils.succRsp(rsp, {
         message: msg
     });
@@ -102,7 +120,7 @@ async function updateAccountGuardian(req, rsp, next) {
   var gIndex = (account.guardians).indexOf(req.body.guardian_old);
   var gIndex2 = (account.guardians).indexOf(req.body.guardian_new);
   if(gIndex2>-1){
-    msg ="The guardian "+req.body.guardian_new+ " you want to add has exists in your guardian list."
+    msg ="The guardian "+req.body.guardian_new+ " you want to update has exists in your guardian list."
   }
   console.log("old,new,index",req.body.guardian_old, account.guardians, gIndex);
   console.log("new guardian in guardians' gIndex2",gIndex2);
