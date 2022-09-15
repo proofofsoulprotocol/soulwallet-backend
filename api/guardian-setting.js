@@ -30,19 +30,26 @@ async function addGuardianSetting(req, rsp, next) {
     });
 }
 
+// It will update with filter: email and wallet_address 
+// and replace the database record by your specific post value
 async function updateGuardianSetting(req, rsp, next) {
-    var updated = false;
-    const account = await Account.find({email: req.body.email});
-    console.log(account);
-    if (account.length > 0) {
-        updated = true;
-        account[0].wallet_address = req.body.wallet_address; // one email force one wallet address
-        account[0].save();
-    }
-    rsp.json({
-      params: req.body,
-      update: updated
-    })
+    const guardianSetting = await GuardianSetting.findOneAndUpdate(
+        {email: req.body.email, wallet_address: req.body.wallet_address}, 
+        {$set:{
+            wallet_address: req.body.wallet_address,
+            total: req.body.total,
+            min  : req.body.min,
+            has_default: req.body.has_default,
+            setting: req.body.setting
+        }});
+    
+    console.log("update result:",guardianSetting);
+
+    return commUtils.succRsp(rsp, {
+        params: guardianSetting,
+        update: guardianSetting ? true : false,
+        message: guardianSetting ? "Update successfully!" : "Update failed!"
+    });
   }
 
 

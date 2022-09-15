@@ -21,6 +21,7 @@ const main = async () => {
   await mongoose.connect(config.mongodbURI, config.mongodbConfig);
   await Account.ensureIndexes();
   await Verification.ensureIndexes();
+  
   await RecoveryRecord.ensureIndexes();
   await GuardianSetting.ensureIndexes();
   console.log("database connected");
