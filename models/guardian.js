@@ -8,7 +8,7 @@ const guardianSchema = new mongoose.Schema({
         index: true,
         unique: true,
     },
-    watch_wallet_list: { //contract wallet address
+    watch_wallet_list: { //contract wallet address and email
         required: true,
         type: Array
     }

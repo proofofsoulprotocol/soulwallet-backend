@@ -13,6 +13,7 @@ const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify
 const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
 const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
+const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 const GuardianSetting = require('./models/guardian-setting');
 var port = process.env.PORT || 3000;
 
@@ -50,6 +51,12 @@ const main = async () => {
   // guardian-setting
   app.post('/add-guardian-setting',addGuardianSetting);
   app.post('/update-guardian-setting',updateGuardianSetting);
+
+  // guardian
+  app.post('/add-guardian-watch-list', addGuardianWatchList);
+  app.post('/get-guardian-watch-list', getGuardianWatchList);
+  app.post('/get-pending-recovery-record', getPendingRecoveryRecord);
+  app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord);

@@ -17,14 +17,15 @@ design doc
 + 5. updateAccount, input: email, wallet_address(unique, required), output: true or false; async invoke after finished the activating account action with onchain contract.
 + 6. isWalletOwner, input email, output: true or false.
 + addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian
++ --------
 + Jhf finished in account.js
 + ------
 + 7. addRecoveryRecord, input: email, wallet_address, output: true or false.
 + 8. fetchRecoveryRecords, input: email, output: false or record structure.
 + 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after signed onchain, async invoke this method to mark specific guardian has signed.
 + -----------
-+ Xuri will finish it.
-<!-- + 10. getGuardiansWallet, todo, finish later. -->
++ Xuri will finish it in recovery-records.js.
++ ------
 + 10. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. 
 + input: email, output: Account obj or setting obj.
 + The structure behind will be stored in Account obj.
@@ -40,19 +41,21 @@ design doc
 + jhf finish it in guardian-setting.js
 + ----------
 + 11. getWalletsRecoveryRecords, get a guardian wallet's recovery records. input wallet_address, output: recovery records array(to be discussed) .
-+ 12. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?
-+ 
-```
-{
-    "wallet_address": "sldfjalsd023840",
-    "new_key(EOA wallet address?)": "230942394203984sdf"
-}
-```
-+ we have two method to trigger the recovery contract invoke, it depends on the wallet contract's gas fee pay method. One is the last signed guardian? or the security center keeping calculate if has enough signature are collected, and then notify the chrome plugin to invoke the recovery contract, all gas problem be resolved by paymaster, because of the chrome plugin is pending on recovery and the security center has no so much money to pay all recoveries. So triggerRecovery return true or false, then chrome plugin or security center call the paymaster to begin the contract's replace key method.
-
++ addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList,
++ ------
++ jhf finish it in guardian.js
++ ------
++ 12. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?(**Talk with Robbie**?)
++ we have two method to trigger the recovery contract invoke, it depends on the wallet contract's gas fee pay method. 
++ The best one is the last signed guardian? or the security center keeping calculate if has enough signature are collected, and then notify the chrome plugin to invoke the recovery contract(positively).
++ All gas problem be resolved by paymaster, because of the chrome plugin is pending on recovery and the security center has no so much money to pay all recoveries. 
++ So triggerRecovery return true or false, then chrome plugin or security center call the paymaster to begin the contract's replace key method.
++ --------
++ Xuri will finish it in recovery-records.js.
++ --------
 + 13. clearRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
 + --------
-+ To be discussed.
++ To be discussed **with Robbie**.
 
 
 ## Collections(Objects)
