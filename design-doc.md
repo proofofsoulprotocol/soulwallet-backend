@@ -16,6 +16,7 @@ design doc
 + 4. updateAccountGuardian, input: email, guardians, output: true or false; async invoke after finished the setting guardian action with onchain contract.
 + 5. updateAccount, input: email, wallet_address(unique, required), output: true or false; async invoke after finished the activating account action with onchain contract.
 + 6. isWalletOwner, input email, output: true or false.
++ addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian
 + Jhf finished in account.js
 + ------
 + 7. addRecoveryRecord, input: email, wallet_address, output: true or false.
@@ -24,8 +25,7 @@ design doc
 + -----------
 + Xuri will finish it.
 <!-- + 10. getGuardiansWallet, todo, finish later. -->
-+ 10. getWalletsRecoveryRecords, get a guardian wallet's recovery records. input wallet_address, output: recovery records array(to be discussed) .
-+ 11. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. 
++ 10. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. 
 + input: email, output: Account obj or setting obj.
 + The structure behind will be stored in Account obj.
 ```
@@ -35,7 +35,12 @@ design doc
     "setting": "3/5"
 }
 ```
-+ 12. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?: 
++ -----------
++ addGuardianSetting, updateGuardianSetting
++ jhf finish it in guardian-setting.js
++ ----------
++ 11. getWalletsRecoveryRecords, get a guardian wallet's recovery records. input wallet_address, output: recovery records array(to be discussed) .
++ 12. triggerRecovery, input: email, wallet_address, return true or false, chrome plugin should store the recovery credential in local?
 + 
 ```
 {
