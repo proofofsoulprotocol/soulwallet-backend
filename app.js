@@ -44,7 +44,7 @@ const main = async () => {
   app.post('/verify-email-exists', verifyEmailExists);
 
   // acount
-  app.post('/add-account', addAccount);
+  app.post('/add-account', addAccount); // express produce a JWT and return
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount); //update account's wallet_address and guardians
   // acount guardian
@@ -64,12 +64,12 @@ const main = async () => {
   app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
-  app.post('/add-recovery-record', addRecoveryRecord);
+  app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
 
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
-  console.log("ENV:",process.env.MONGODB_URI)
+  console.log("ENV:",process.env.MONGODB_URI);
   // error handler
   app.use(function(err, req, res, next) {
     // only providing error in development
