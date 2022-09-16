@@ -24,7 +24,7 @@ design doc
 + 8. fetchRecoveryRecords, input: email, output: false or record structure.
 + 9. updateRecoveryRecord, input: email, guardian-address(single update), output: true or false; after signed onchain, async invoke this method to mark specific guardian has signed.
 + -----------
-+ Xuri will finish it in recovery-records.js.
++ Xuri finished it in recovery-records.js.
 + ------
 + 10. getGuardianSetting, it will return a PoC product setting formate, it can be stored in the Account object or a individual setting Object, to be discussed. 
 + input: email, output: Account obj or setting obj.
@@ -53,9 +53,9 @@ design doc
 + --------
 + Xuri will finish it in recovery-records.js.
 + --------
-+ 13. clearRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
++ 13. clearRecoveryRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
 + --------
-+ To be discussed **with Robbie**.
++ Xuri add and discussed **with Robbie**.
 
 
 ## Collections(Objects)

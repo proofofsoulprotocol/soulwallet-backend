@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var indexRouter = require('./routes/index');
 const Account = require('./models/account');
+const Guardian = require('./models/guardian');
+const GuardianSetting = require('./models/guardian-setting');
 const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
@@ -14,7 +16,7 @@ const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-reco
 const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
-const GuardianSetting = require('./models/guardian-setting');
+
 var port = process.env.PORT || 3000;
 
 const main = async () => {
@@ -25,6 +27,7 @@ const main = async () => {
   
   await RecoveryRecord.ensureIndexes();
   await GuardianSetting.ensureIndexes();
+  await Guardian.ensureIndexes();
   console.log("database connected");
 
   var app = express();
@@ -51,8 +54,9 @@ const main = async () => {
   // guardian-setting
   app.post('/add-guardian-setting',addGuardianSetting);
   app.post('/update-guardian-setting',updateGuardianSetting);
+  app.post('/get-guardian-setting',updateGuardianSetting); //todo
 
-  // guardian
+  // guardian, show the list guardians seen in the security center
   app.post('/add-guardian-watch-list', addGuardianWatchList);
   app.post('/get-guardian-watch-list', getGuardianWatchList);
   app.post('/get-pending-recovery-record', getPendingRecoveryRecord);
