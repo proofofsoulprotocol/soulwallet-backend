@@ -1,17 +1,11 @@
-const errRsp = (rsp, code, msg) => {
-    rsp.status(code).json({
-      "error": {
-        "code": code,
-        "message": msg
-      }
-    });
-  };
-  
-const succRsp = (rsp, data) => {
+
+const retRsp = (code, msg, data) => {
 return rsp.json({
+    "code": code, // 200, 201, 401, 500
+    "msg": msg,
     "data": data
 });
 };
-  
 
-module.exports = {errRsp, succRsp};
+
+module.exports = {retRsp};

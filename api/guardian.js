@@ -5,37 +5,38 @@ var commUtils = require("../utils/comm-utils");
 
 async function addGuardianWatchList(req, rsp, next) {
     var msg = "Oh no signal";
-    const gdFind = await Guardian.findOne(
-        {guardian_address: req.body.guardian_address},
-        async function(err, guardian){
-            console.log("err:",err);
+    const guardianR = await Guardian.findOne({guardian_address: req.body.guardian_address}).then(
+        function(err, guardian){
+            console.log("query and get a guardian:",guardian);
             if(!guardian){ // not exists, then insert new
+                console.log("guardian zero:",guardian);
                     const guardianAdd = new Guardian({
                         guardian_address: req.body.guardian_address,
                         wallet_address: req.body.wallet_address,
                     });
                     try{
-                        await guardianAdd.save();
+                         guardianAdd.save();
+                         console.log("try to Add one!");
                     }
                     catch(error){
                         msg = "Insert new error";
                         console.log("Add new guardian error", error);
                     }
-            }else{ // if exists guardian, then depends on the wallet address exists or not
-                console.log("guardian:",guardian);
+            }else{
+                // if exists guardian, then depends on the wallet address exists or not
+                console.log("guardian has:",guardian);
                 var gIndex = (guardian.watch_wallet_list).indexOf(req.body.wallet_address);
                 if(gIndex>-1){
                   msg ="The contract wallet address: "+req.body.wallet_address+ " you want to add has exists in your watch list."
                 }else{
                     guardian.watch_wallet_list[gIndex+1] = wallet_address;
-                    await guardian.save();
+                    guardian.save();
                 }
-
-            }
+            }            
         }
     );
     return commUtils.succRsp(rsp, {
-        params: guardian,
+        params: guardianR,
         message: msg
     });
 }

@@ -38,6 +38,7 @@ const main = async () => {
   app.set('trust proxy', 2);
 
   // verify
+  
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
