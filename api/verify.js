@@ -54,8 +54,9 @@ async function verifyEmailNum(req, rsp, next) {
 
     const result = await Verification.find({email: req.body.email, code: code});
     // TODO: set jwt
+    // TODO: disable magic code
     return commUtils.retRsp(rsp, 200, "", {
-        verified: result.length > 0
+        verified: code === "888888" || result.length > 0
     });
 }
 
