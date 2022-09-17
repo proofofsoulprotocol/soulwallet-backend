@@ -6,13 +6,13 @@ const accountSchema = new mongoose.Schema({
         required: true,
         type: String,
         index: true,
-        unique: true
+        unique: false // todo
     },
     wallet_address: {
         required: false,
         type: String,
         index: true,
-        unique: true,
+        unique: false, // todo 
     },
     guardians: {
         required: false,

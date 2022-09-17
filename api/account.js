@@ -17,7 +17,7 @@ async function addAccount(req, rsp, next) {
     }
 
     const account = new Account({
-        email: req.body.email,
+        email: req.body.email, // one email, one wallet
         wallet_address: req.body.wallet_address
     })
     var msg = "Add record successfully.";
@@ -25,7 +25,8 @@ async function addAccount(req, rsp, next) {
         const accountToSave = await account.save();
     }
     catch (error) {
-        msg="Save record error"
+        msg="Save record error";
+        console.log("error:",error);
     }
     return commUtils.succRsp(rsp, {
         message: msg

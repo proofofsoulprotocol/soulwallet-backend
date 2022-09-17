@@ -7,13 +7,16 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var indexRouter = require('./routes/index');
 const Account = require('./models/account');
+const Guardian = require('./models/guardian');
+const GuardianSetting = require('./models/guardian-setting');
 const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
 const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
-const GuardianSetting = require('./models/guardian-setting');
+const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
+
 var port = process.env.PORT || 3000;
 
 const main = async () => {
@@ -24,6 +27,7 @@ const main = async () => {
   
   await RecoveryRecord.ensureIndexes();
   await GuardianSetting.ensureIndexes();
+  await Guardian.ensureIndexes();
   console.log("database connected");
 
   var app = express();
@@ -34,12 +38,13 @@ const main = async () => {
   app.set('trust proxy', 2);
 
   // verify
+  
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
 
   // acount
-  app.post('/add-account', addAccount);
+  app.post('/add-account', addAccount); // express produce a JWT and return
   app.post('/is-owner', isWalletOwner);
   app.post('/update-account', updateAccount); //update account's wallet_address and guardians
   // acount guardian
@@ -50,14 +55,21 @@ const main = async () => {
   // guardian-setting
   app.post('/add-guardian-setting',addGuardianSetting);
   app.post('/update-guardian-setting',updateGuardianSetting);
+  app.post('/get-guardian-setting',updateGuardianSetting); //todo
+
+  // guardian, show the list guardians seen in the security center
+  app.post('/add-guardian-watch-list', addGuardianWatchList);
+  app.post('/get-guardian-watch-list', getGuardianWatchList);
+  app.post('/get-pending-recovery-record', getPendingRecoveryRecord);
+  app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
-  app.post('/add-recovery-record', addRecoveryRecord);
+  app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
 
   app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
   app.use('/', indexRouter);
-  console.log("ENV:",process.env.MONGODB_URI)
+  console.log("ENV:",process.env.MONGODB_URI);
   // error handler
   app.use(function(err, req, res, next) {
     // only providing error in development

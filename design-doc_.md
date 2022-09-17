@@ -1,12 +1,15 @@
 design doc
-## Background
+##  Background
+  
 + Set the backend total technical design and environment.
-## All functions
+##  All functions
+  
 + From design: 
-+ [Security center solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/security-center-solution.md)
-+ [Social recovery solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/Social-recovery-solution.md)
-+ ![See the flow](recovery-sequence-diagram.png)
-### APIs
++ [Security center solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/security-center-solution.md )
++ [Social recovery solution](https://github.com/proofofsoulprotocol/smart-contract-wallet-4337/blob/main/dev-docs/Social-recovery-solution.md )
++ ![See the flow](recovery-sequence-diagram.png )
+###  APIs
+  
 + APIs for Chrome plugin 
 + 1. verifyEmail, input: email, output: random number(6) in mail.
 + 2. verifyEmailNum, input: email, random number, output: true or false.
@@ -56,10 +59,12 @@ design doc
 + 13. clearRecoveryRecords, input: email, return true or false. It will clear the specific recovery records on the security server, but can't clear the recovery data which is on progress but not finished.
 + --------
 + Xuri add and discussed **with Robbie**.
-
-
-## Collections(Objects)
-### 1.Accounts
+  
+  
+##  Collections(Objects)
+  
+###  1.Accounts
+  
 + model/account.js
 ```
   { 
@@ -75,7 +80,8 @@ design doc
     <!-- "status": "created, activated, recovering, recovered" -->
   }
 ```
-### 1.1 Guardian_settings
+###  1.1 Guardian_settings
+  
 ```
 {
     "email": "aaa@bbb.net", //sync with onchain data cycle time.
@@ -88,7 +94,8 @@ design doc
 ```    
 + Belongs to account area, add-guardian-setting, update-guardian-setting
 + Jhf finished in guardian-setting.js        
-### 2.VerifyRecords
+###  2.VerifyRecords
+  
 + model/verify-records.js
 ```
 {
@@ -97,9 +104,11 @@ design doc
     date: date type,
 }
 ```
-### 3.Guardians
+###  3.Guardians
+  
 + Model: guardian.js
-<!-- + Guardians save in the Accounts collection. -->
+  
+  
 + We will add Guardians obj in future for index from guardians view.
 + 
 ```
@@ -108,9 +117,10 @@ design doc
     wallet_address: [asdfadf,123123,23213,2323]
 }
 ```
-
-### 4.RecoveryRecords
-
+  
+###  4.RecoveryRecords
+  
+  
 ```
 recovery record structure
 {
@@ -135,15 +145,20 @@ recovery record structure
   ]
 }
 ```
-
-## Internal and Utils
-### MakeResponse
+  
+##  Internal and Utils
+  
+###  MakeResponse
+  
 + Input parameter, return response json formate.
-
-### SendEmail
-
-## Global
-### API request and response
+  
+###  SendEmail
+  
+  
+##  Global
+  
+###  API request and response
+  
 ```
 response return data structure 
 {   
@@ -164,20 +179,25 @@ or
   msg: "msgs returned",
   hash: hash
 }
-
+  
 ```
-
-### Design logic
-#### Scenarios or User Case
+  
+###  Design logic
+  
+####  Scenarios or User Case
+  
 + All products want to resolve some questions happening in different scenarios.
 + We define 3 Scenarios in PoC: Create\Activate\Recovery
-#### Main Objects
+####  Main Objects
+  
 + All scenarios are different Business Object and their relations weaving together.
 + We have 3 BO: Account, Guardians, Recovery Records, accumulate all the scenarios data.
-
-#### Main APIs
+  
+####  Main APIs
+  
 + All APIs are relations and actions between BOs.
 + We have about 13 methods above.
-
-
-
+  
+  
+  
+  

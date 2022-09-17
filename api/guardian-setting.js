@@ -44,7 +44,7 @@ async function updateGuardianSetting(req, rsp, next) {
         }});
     
     console.log("update result:",guardianSetting);
-
+    
     return commUtils.succRsp(rsp, {
         params: guardianSetting,
         update: guardianSetting ? true : false,
