@@ -5,6 +5,7 @@ var logger = require('morgan');
 var http = require('http');
 var mongoose = require('mongoose');
 var config = require('./config');
+const commUtils = require('./utils/comm-utils');
 var indexRouter = require('./routes/index');
 const Account = require('./models/account');
 const Guardian = require('./models/guardian');
@@ -24,11 +25,11 @@ const main = async () => {
   await mongoose.connect(config.mongodbURI, config.mongodbConfig);
   await Account.ensureIndexes();
   await Verification.ensureIndexes();
-  
   await RecoveryRecord.ensureIndexes();
   await GuardianSetting.ensureIndexes();
   await Guardian.ensureIndexes();
   console.log("database connected");
+  console.log("ENV:",process.env.MONGODB_URI);
 
   var app = express();
   app.use(logger('dev'));
@@ -38,7 +39,6 @@ const main = async () => {
   app.set('trust proxy', 2);
 
   // verify
-  
   app.post('/verify-email', verifyEmail);
   app.post('/verify-email-num', verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
@@ -67,15 +67,15 @@ const main = async () => {
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
 
-  app.get('/ip', (req, rsp) => rsp.json({ip: req.ip}));
-  app.use('/', indexRouter);
-  console.log("ENV:",process.env.MONGODB_URI);
+  // test
+  app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
+  app.get('/ip', (req, rsp) => commUtils.retRsp(rsp, 200, "your ip", {ip: req.ip}));
+  // app.use('/', indexRouter);
+
   // error handler
   app.use(function(err, req, res, next) {
     // only providing error in development
-    res.status(err.status || 500);
-    res.json({
-      message: err.message,
+    return commUtils.retRsp(rsp, err.status || 500, err.message, {
       error: config.env == 'development' ? err : {}
     });
   });

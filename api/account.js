@@ -13,7 +13,7 @@ async function findAccount(mail) {
 
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "invalid email");
     }
 
     const account = new Account({
@@ -28,7 +28,7 @@ async function addAccount(req, rsp, next) {
         msg="Save record error";
         console.log("error:",error);
     }
-    return commUtils.succRsp(rsp, {
+    return commUtils.retRsp(rsp, 200, "added", {
         message: msg
     });
 }
@@ -74,7 +74,7 @@ async function updateAccount(req, rsp, next) {
 
   async function addAccountGuardian(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "invalid email");
     }
     var guardian = req.body.guardian;
     console.log("guardian will be added:",guardian);
@@ -83,17 +83,13 @@ async function updateAccount(req, rsp, next) {
     var msg = "";
     if (account === null) {
       msg = "Has no record of your mail and wallet_address:"+req.body.email+":::"+ req.body.wallet_address;
-      return commUtils.succRsp(rsp, {
-        message: msg
-    });
+      return commUtils.retRsp(rsp, 404, msg);
     }
     console.log("account guardian is ",account.guardians);
     var gIndex = (account.guardians).indexOf(req.body.guardian);
     if(gIndex>-1){
       msg ="The guardian "+req.body.guardian+ " you want to add has exists in your guardian list."
-      return commUtils.succRsp(rsp, {
-        message: msg
-    });  
+      return commUtils.retRsp(rsp, 400, msg);
     }
     msg = "Add guardian successfully.";
     try { // maybe can improved and refactor
@@ -106,9 +102,7 @@ async function updateAccount(req, rsp, next) {
         console.log("Msg",msg);
     }
     console.log();
-    return commUtils.succRsp(rsp, {
-        message: msg
-    });
+    return commUtils.retRsp(rsp, 200, "added");
 }
 
 
@@ -131,10 +125,7 @@ async function updateAccountGuardian(req, rsp, next) {
     var replace = await account.save();
     console.log("replace:",replace);
   }
-  rsp.json({
-    params: req.body.guardian_new,
-    Msg: msg
-  })
+  commUtils.retRsp(rsp, 200, msg);
 }
 
 async function getAccountGuardian(req, rsp, next) {
@@ -145,10 +136,7 @@ async function getAccountGuardian(req, rsp, next) {
   }
   rtData = result ? result.guardians : null ;
   console.log("rtData:",rtData);
-  rsp.json({
-    params: rtData,
-    Msg: msg
-  })
+  commUtils.retRsp(rsp, 200, msg, rtData);
 }
 
 

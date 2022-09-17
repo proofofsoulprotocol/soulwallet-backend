@@ -27,9 +27,7 @@ async function addRecoveryRecord(req, rsp, next) {
     }
     await result.save();
 
-    return commUtils.succRsp(rsp, {
-        record: result
-    })
+    return commUtils.retRsp(rsp, 200, "add success", result)
 }
 
 
@@ -38,10 +36,10 @@ async function fetchRecoveryRecords(req, rsp, next) {
         wallet_address: req.body.wallet_address
     });
     if (!result) {
-        return commUtils.errRsp(rsp, 404, "wallet address not found");
+        return commUtils.retRsp(rsp, 404, "wallet address not found");
     }
 
-    return commUtils.succRsp(rsp, {
+    return commUtils.retRsp(rsp, 200, "success", {
         recovery_records: result.recovery_records
     });
 }

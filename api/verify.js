@@ -16,13 +16,13 @@ const randomVerifyCode = (length = 6) => {
 
 async function verifyEmail(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "invalid email format");
     }
 
     // 1. send limit
     const result = await Verification.find({ email: req.body.email});
     if (result.length > config.verifyMaxResend) {
-        return commUtils.errRsp(rsp, 429, "too many send of current email");
+        return commUtils.retRsp(rsp, 429, "too many send of current email");
     }
 
     // 2. generate random code
@@ -39,24 +39,22 @@ async function verifyEmail(req, rsp, next) {
     // 4. send code
     await sendVerifyCode(req.body.email, code);
 
-    return commUtils.succRsp(rsp, {
-        email: req.body.email
-    })
+    return commUtils.retRsp(rsp, 200, "email sent", {})
 }
 
 async function verifyEmailNum(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "invalid email format");
     }
 
     if (typeof req.body.code !== 'string') {
-        return commUtils.errRsp(rsp, 400, "empty code");
+        return commUtils.retRsp(rsp, 400, "empty code");
     }
     const code = req.body.code.toUpperCase();
 
     const result = await Verification.find({email: req.body.email, code: code});
     // TODO: set jwt
-    return commUtils.succRsp(rsp, {
+    return commUtils.retRsp(rsp, 200, "", {
         verified: result.length > 0
     });
 }
@@ -67,10 +65,9 @@ async function verifyEmailExists(req, rsp, next) {
   if (result.length > 0) {
     exists = true;
   }
-  rsp.json({
-    params: req.body,
+  return commUtils.retRsp(rsp, 200, "", {
     exists: exists
-  })
+  });
 }
 
 

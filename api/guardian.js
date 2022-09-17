@@ -35,10 +35,7 @@ async function addGuardianWatchList(req, rsp, next) {
             }            
         }
     );
-    return commUtils.succRsp(rsp, {
-        params: guardianR,
-        message: msg
-    });
+    return commUtils.retRsp(rsp, 200, msg, guardianR);
 }
 
 // to be discuss: query each wallet_address on recovery record
@@ -54,10 +51,10 @@ async function getPendingRecoveryRecord(req, rsp, next) {
         }
     );
     
-    return commUtils.succRsp(rsp, {
+    var msg = recoveryRecords ? "Query successfully!" : "Query failed!";
+    return commUtils.retRsp(rsp, 200, msg, {
         params: recoveryRecords,
         success: recoveryRecords ? true : false,
-        message: recoveryRecords ? "Query successfully!" : "Query failed!"
     });
   }
   
@@ -67,10 +64,8 @@ async function getPendingRecoveryRecord(req, rsp, next) {
     
     console.log("get result:",guardian);
     
-    return commUtils.succRsp(rsp, {
-        params: guardian,
-        message: guardian ? "Find successfully!" : "Find failed!"
-    });
+    var msg = guardian ? "Find successfully!" : "Find failed!";
+    return commUtils.retRsp(rsp, 200, msg, guardian);
   }
 
 // It will update with filter: email and wallet_address 
@@ -85,10 +80,10 @@ async function updateGuardianWatchList(req, rsp, next) {
     
     console.log("update result:",guardian);
     
-    return commUtils.succRsp(rsp, {
+    var msg = guardianSetting ? "Update successfully!" : "Update failed!";
+    return commUtils.retRsp(rsp, 200, msg, {
         params: guardianSetting,
-        update: guardianSetting ? true : false,
-        message: guardianSetting ? "Update successfully!" : "Update failed!"
+        update: guardianSetting ? true : false
     });
   }
 
