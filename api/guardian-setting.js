@@ -5,7 +5,7 @@ const { validateEmail} = require("../utils/email-utils");
 
 async function addGuardianSetting(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.errRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "invalid email");
     }
 
     const guardian_setting = new GuardianSetting({
@@ -25,9 +25,7 @@ async function addGuardianSetting(req, rsp, next) {
         msg="Save record error";
         console.log("Error:",error);
     }
-    return commUtils.succRsp(rsp, {
-        message: msg
-    });
+    return commUtils.retRsp(rsp, 200, msg);
 }
 
 // It will update with filter: email and wallet_address 
@@ -45,10 +43,10 @@ async function updateGuardianSetting(req, rsp, next) {
     
     console.log("update result:",guardianSetting);
     
-    return commUtils.succRsp(rsp, {
+    var msg = guardianSetting ? "Update successfully!" : "Update failed!";
+    return commUtils.retRsp(rsp, 200, msg,  {
         params: guardianSetting,
         update: guardianSetting ? true : false,
-        message: guardianSetting ? "Update successfully!" : "Update failed!"
     });
   }
 

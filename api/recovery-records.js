@@ -3,9 +3,8 @@ const commUtils = require("../utils/comm-utils");
 
 async function addRecoveryRecord(req, rsp, next) {
     // TODO: check params
-
     const result = await RecoveryRecord.findOneAndUpdate({
-        wallet_address: req.body.wallet_address
+        email: req.body.email
     }, {}, {
         new: true,
         upsert: true
@@ -27,21 +26,19 @@ async function addRecoveryRecord(req, rsp, next) {
     }
     await result.save();
 
-    return commUtils.succRsp(rsp, {
-        record: result
-    })
+    return commUtils.retRsp(rsp, 200, "add success", result)
 }
 
 
 async function fetchRecoveryRecords(req, rsp, next) {
     const result = await RecoveryRecord.findOne({
-        wallet_address: req.body.wallet_address
+        email: req.body.email
     });
     if (!result) {
-        return commUtils.errRsp(rsp, 404, "wallet address not found");
+        return commUtils.retRsp(rsp, 404, "wallet address not found");
     }
 
-    return commUtils.succRsp(rsp, {
+    return commUtils.retRsp(rsp, 200, "success", {
         recovery_records: result.recovery_records
     });
 }
