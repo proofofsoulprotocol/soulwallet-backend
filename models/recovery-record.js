@@ -7,12 +7,6 @@ const recoveryRecordSchema = new mongoose.Schema({
     index: true,
     unique: true
   },
-  // wallet_address: {
-  //   required: true,
-  //   type: String,
-  //   index: true,
-  //   unique: true
-  // },
   recovery_records: [{
     guardian_address: {
       require: true,

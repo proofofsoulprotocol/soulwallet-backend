@@ -16,7 +16,7 @@ if (config.env === "production") {
 }
 
 
-config.verifyExpireMinutes = 1;
+config.verifyExpireMinutes = 30;
 config.verifyMaxResend = 10;
 
 module.exports = config;

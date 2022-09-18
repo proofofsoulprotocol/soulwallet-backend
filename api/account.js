@@ -2,6 +2,7 @@ var Account = require("../models/account");
 var commUtils = require("../utils/comm-utils");
 const { validateEmail} = require("../utils/email-utils");
 const config = require("../config");
+const { verifyEmailCode } = require('./verify');
 // const crypto = require("crypto");
 // addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
@@ -14,6 +15,14 @@ async function findAccount(mail) {
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "invalid email");
+    }
+    if (typeof req.body.email != 'string') {
+      return commUtils.retRsp(rsp, 400, "no email verify code");
+    }
+
+    const codeValid = await verifyEmailCode(email, code);
+    if (!codeValid) {
+      return commUtils.retRsp(rsp, 400, "code not valid");
     }
 
     const account = new Account({
