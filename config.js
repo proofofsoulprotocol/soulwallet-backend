@@ -15,6 +15,8 @@ if (config.env === "production") {
     config.mongodbConfig = {};
 }
 
+config.jwtKey = process.env.JWT_KEY;
+config.jwtExpiresInSecond = 15 * 24 * 60 * 60; // 15 day
 
 config.verifyExpireMinutes = 30;
 config.verifyMaxResend = 10;
