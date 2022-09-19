@@ -1,8 +1,11 @@
 const RecoveryRecord = require("../models/recovery-record");
 const commUtils = require("../utils/comm-utils");
+const jwt = require("jsonwebtoken");
+const config = require("../config");
 
 async function addRecoveryRecord(req, rsp, next) {
-    // TODO: check params
+    // TODO: verify email account exists
+    // TODO: verify signature
     const result = await RecoveryRecord.findOneAndUpdate({
         email: req.body.email
     }, {}, {
@@ -26,7 +29,12 @@ async function addRecoveryRecord(req, rsp, next) {
     }
     await result.save();
 
-    return commUtils.retRsp(rsp, 200, "add success", result)
+    const jwtToken = jwt.sign({
+        wallet_address: req.body.guardian_address // TODO: email?
+    }, config.jwtKey, {expiresIn: config.jwtExpiresInSecond});
+    return commUtils.retRsp(rsp, 200, "added", {
+        jwtToken
+    })
 }
 
 

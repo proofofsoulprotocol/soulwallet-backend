@@ -42,6 +42,16 @@ async function verifyEmail(req, rsp, next) {
     return commUtils.retRsp(rsp, 200, "email sent", {})
 }
 
+const verifyEmailCode = async (email, code) => {
+    // TODO: rate limit
+    if (typeof email != 'string' || typeof code != 'string') {
+        return false;
+    }
+    const result = await Verification.find({email: email, code: code});
+    // TODO: disable magic code
+    return code === "888888" || result.length > 0
+}
+
 async function verifyEmailNum(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "invalid email format");
@@ -54,7 +64,6 @@ async function verifyEmailNum(req, rsp, next) {
 
     const result = await Verification.find({email: req.body.email, code: code});
     // TODO: set jwt
-    // TODO: disable magic code
     return commUtils.retRsp(rsp, 200, "", {
         verified: code === "888888" || result.length > 0
     });
@@ -72,4 +81,4 @@ async function verifyEmailExists(req, rsp, next) {
 }
 
 
-module.exports = {verifyEmail, verifyEmailNum, verifyEmailExists};
+module.exports = {verifyEmail, verifyEmailNum, verifyEmailExists, verifyEmailCode};

@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { model } = require('mongoose');
 const nodemailer = require('nodemailer');
 const config = require('../config');
