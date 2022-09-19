@@ -148,7 +148,23 @@ async function getAccountGuardian(req, rsp, next) {
   const result = await Account.findOne({email: req.body.email});
   var msg = "";
   if (result === null) {
-    msg = "Has no record of your mail:"+req.body.email;
+    msg = "Has no record of your Account:"+req.body.email;
+  }
+  rtData = result ? result.guardians : null ;
+  console.log("rtData:",rtData);
+  commUtils.retRsp(rsp, 200, msg, rtData);
+}
+
+async function delAccountGuardian(req, rsp, next) {
+  const account = await Account.findOne({email: req.body.email});
+  var msg = "";
+  if (account === null) {
+    msg = "Has no record of your Account:"+req.body.email;
+  }
+  var gIndex = (account.guardians).indexOf(req.body.guardian);
+  if(gIndex>-1){
+    account.guardians[gIndex] = null;
+    await account.save();
   }
   rtData = result ? result.guardians : null ;
   console.log("rtData:",rtData);
@@ -158,4 +174,4 @@ async function getAccountGuardian(req, rsp, next) {
 
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, updateAccountGuardian};
+module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
