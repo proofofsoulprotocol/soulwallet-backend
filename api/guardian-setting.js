@@ -5,7 +5,7 @@ const { validateEmail} = require("../utils/email-utils");
 
 async function addGuardianSetting(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "Invalid email");
     }
 
     const guardian_setting = new GuardianSetting({
