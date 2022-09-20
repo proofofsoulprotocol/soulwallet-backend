@@ -39,7 +39,7 @@ async function addRecoveryRecord(req, rsp, next) {
 }
 
 
-async function updateRecoveryRecord(req, rsp, next) {
+async function updateRecoveryRecord(req, rsp, triggerPaymasterReplace) {
     // TODO: validate signature
     const result = await RecoveryRecord.findOne({
         email: req.body.email
@@ -63,6 +63,11 @@ async function updateRecoveryRecord(req, rsp, next) {
     await result.save();
 
     return commUtils.retRsp(rsp, 200, "Updated!");
+}
+
+// invoke the API of Paymaster server, do not wait for reply
+function triggerPaymasterReplace(email, wallet_address, new_key){
+    const baseUrlPaymaster ="";
 }
 
 async function fetchRecoveryRecords(req, rsp, next) {
