@@ -14,8 +14,10 @@ const GuardianSetting = require('./models/guardian-setting');
 const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
-const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records")
-const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, updateAccountGuardian} = require('./api/account');
+
+const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require(“./api/recovery-records”)
+const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require(‘./api/account’);
+
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 
@@ -51,6 +53,7 @@ const main = async () => {
   // acount guardian
   app.post('/add-account-guardian', addAccountGuardian); // add new one, unique
   app.post('/get-account-guardian', getAccountGuardian); // get a array obj
+  app.post('/del-account-guardian', delAccountGuardian); // get a array obj
   app.post('/update-account-guardian', updateAccountGuardian);// replace old one with new
 
   // guardian-setting

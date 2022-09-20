@@ -1,4 +1,5 @@
 const RecoveryRecord = require("../models/recovery-record");
+const Guardian_setting = require("../models/guardian-setting");
 const commUtils = require("../utils/comm-utils");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
@@ -65,15 +66,20 @@ async function updateRecoveryRecord(req, rsp, next) {
 }
 
 async function fetchRecoveryRecords(req, rsp, next) {
-    const result = await RecoveryRecord.findOne({
+    const rrRecord = await RecoveryRecord.findOne({
         email: req.body.email
     });
-    if (!result) {
+    if (!rrRecord) {
         return commUtils.retRsp(rsp, 404, "wallet address not found");
     }
-
+    const gsRecord = await Guardian_setting.findOne({email: req.body.email});
+    const rtData = {
+        total: gsRecord.total,
+        min: gsRecord.min,
+        signedNum: rrRecord.guardians.length
+    };
     return commUtils.retRsp(rsp, 200, "success", {
-        recovery_records: result.recovery_records
+        recovery_records: rtData
     });
 }
 

@@ -63,15 +63,15 @@ async function addAccount(req, rsp, next) {
 
 async function updateAccount(req, rsp, next) {
     var updated = false;
-    const account = await Account.find({email: req.body.email});
+    const account = await Account.findOne({email: req.body.email});
     console.log(account);
-    if (account.length > 0) {
+    if (account) {
         updated = true;
-        account[0].wallet_address = req.body.wallet_address; // one email force one wallet address
-        account[0].save();
+        account.wallet_address = req.body.wallet_address; // one email force one wallet address
+        account.save();
     }
     rsp.json({
-      params: req.body,
+      params: account,
       update: updated
     })
   }
@@ -148,7 +148,23 @@ async function getAccountGuardian(req, rsp, next) {
   const result = await Account.findOne({email: req.body.email});
   var msg = "";
   if (result === null) {
-    msg = "Has no record of your mail:"+req.body.email;
+    msg = "Has no record of your Account:"+req.body.email;
+  }
+  rtData = result ? result.guardians : null ;
+  console.log("rtData:",rtData);
+  commUtils.retRsp(rsp, 200, msg, rtData);
+}
+
+async function delAccountGuardian(req, rsp, next) {
+  const account = await Account.findOne({email: req.body.email});
+  var msg = "";
+  if (account === null) {
+    msg = "Has no record of your Account:"+req.body.email;
+  }
+  var gIndex = (account.guardians).indexOf(req.body.guardian);
+  if(gIndex>-1){
+    account.guardians[gIndex] = null;
+    await account.save();
   }
   rtData = result ? result.guardians : null ;
   console.log("rtData:",rtData);
@@ -158,4 +174,4 @@ async function getAccountGuardian(req, rsp, next) {
 
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, updateAccountGuardian};
+module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
