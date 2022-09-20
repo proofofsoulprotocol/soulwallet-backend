@@ -16,13 +16,13 @@ const randomVerifyCode = (length = 6) => {
 
 async function verifyEmail(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "invalid email format");
+        return commUtils.retRsp(rsp, 400, "Invalid email format");
     }
 
     // 1. send limit
     const result = await Verification.find({ email: req.body.email});
     if (result.length > config.verifyMaxResend) {
-        return commUtils.retRsp(rsp, 429, "too many send of current email");
+        return commUtils.retRsp(rsp, 429, "Too many send of current email");
     }
 
     // 2. generate random code
@@ -39,7 +39,7 @@ async function verifyEmail(req, rsp, next) {
     // 4. send code
     await sendVerifyCode(req.body.email, code);
 
-    return commUtils.retRsp(rsp, 200, "email sent", {})
+    return commUtils.retRsp(rsp, 200, "Email sent", {})
 }
 
 const verifyEmailCode = async (email, code) => {
@@ -54,11 +54,11 @@ const verifyEmailCode = async (email, code) => {
 
 async function verifyEmailNum(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "invalid email format");
+        return commUtils.retRsp(rsp, 400, "Invalid email format");
     }
 
     if (typeof req.body.code !== 'string') {
-        return commUtils.retRsp(rsp, 400, "empty code");
+        return commUtils.retRsp(rsp, 400, "Empty code");
     }
     const code = req.body.code.toUpperCase();
 
