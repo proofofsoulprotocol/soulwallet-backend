@@ -145,7 +145,7 @@ async function updateAccountGuardian(req, rsp, next) {
 }
 
 async function getAccountGuardian(req, rsp, next) {
-  const result = await Account.findOne({email: req.body.email});
+  const result = await Account.findOne({email: req.body.email, wallet_address: req.body.wallet_address});
   var msg = "";
   if (result === null) {
     msg = "Has no record of your Account:"+req.body.email;
