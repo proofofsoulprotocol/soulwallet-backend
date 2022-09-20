@@ -15,8 +15,8 @@ const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 
-const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require(“./api/recovery-records”)
-const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require(‘./api/account’);
+const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
+const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
