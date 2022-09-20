@@ -150,13 +150,16 @@ async function getAccountGuardian(req, rsp, next) {
   if (!result) {
     msg = "Has no record of your Account:"+req.body.email;
   }
+  console.log(result);
+  console.log(result.guardians);
   rtData = result ? result.guardians : null ;
+
   console.log("rtData:",rtData);
   commUtils.retRsp(rsp, 200, msg, rtData);
 }
 
 async function delAccountGuardian(req, rsp, next) {
-  const account = await Account.findOne({email: req.body.email});
+  const account = await Account.findOne({email: req.body.email,wallet_address: req.body.wallet_address});
   var msg = "";
   if (!account) {
     msg = "Has no record of your Account:"+req.body.email;
@@ -166,7 +169,7 @@ async function delAccountGuardian(req, rsp, next) {
     account.guardians[gIndex] = null;
     await account.save();
   }
-  rtData = result ? result.guardians : null ;
+  rtData = account ? account.guardians : null ;
   console.log("rtData:",rtData);
   commUtils.retRsp(rsp, 200, msg, rtData);
 }
