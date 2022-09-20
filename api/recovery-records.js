@@ -9,7 +9,7 @@ async function addRecoveryRecord(req, rsp, next) {
     // 1. verify code
     const verified = await verifyEmailCode(req.body.email, req.body.code);
     if (!verified) {
-        return commUtils.retRsp(rsp, 400, "code verify failed");
+        return commUtils.retRsp(rsp, 400, "Code verify failed");
     }
 
     // 2. find existing
@@ -17,7 +17,7 @@ async function addRecoveryRecord(req, rsp, next) {
         email: req.body.email
     });
     if (result) {
-        return commUtils.retRsp(rsp, 400, "recovery record already exists");
+        return commUtils.retRsp(rsp, 400, "Recovery record already exists");
     }
 
     // 3. create records
@@ -33,7 +33,7 @@ async function addRecoveryRecord(req, rsp, next) {
         wallet_address: req.body.email
     }, config.jwtKey, {expiresIn: config.jwtExpiresInSecond});
 
-    return commUtils.retRsp(rsp, 200, "added", {
+    return commUtils.retRsp(rsp, 200, "Added successfully!", {
         jwtToken
     })
 }
@@ -45,7 +45,7 @@ async function updateRecoveryRecord(req, rsp, next) {
         email: req.body.email
     });
     if (!result) {
-        return commUtils.retRsp(rsp, 404, "recovery record not found");
+        return commUtils.retRsp(rsp, 404, "Recovery record not found");
     }
 
     updated = false;
@@ -57,12 +57,12 @@ async function updateRecoveryRecord(req, rsp, next) {
         }
     }
     if (!updated) {
-        return commUtils.retRsp(rsp, 400, "guardian not in list");
+        return commUtils.retRsp(rsp, 400, "Guardian not in list");
     }
 
     await result.save();
 
-    return commUtils.retRsp(rsp, 200, "updated");
+    return commUtils.retRsp(rsp, 200, "Updated!");
 }
 
 async function fetchRecoveryRecords(req, rsp, next) {
@@ -70,7 +70,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
         email: req.body.email
     });
     if (!rrRecord) {
-        return commUtils.retRsp(rsp, 404, "wallet address not found");
+        return commUtils.retRsp(rsp, 404, "Wallet address not found");
     }
     const gsRecord = await Guardian_setting.findOne({email: req.body.email});
     const rtData = {
@@ -78,7 +78,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
         min: gsRecord.min,
         signedNum: rrRecord.guardians.length
     };
-    return commUtils.retRsp(rsp, 200, "success", {
+    return commUtils.retRsp(rsp, 200, "Success!", {
         recovery_records: rtData
     });
 }
@@ -90,9 +90,9 @@ async function clearRecoveryRecords(req, rsp, next) {
     });
 
     if (!result) {
-        return commUtils.retRsp(rsp, 404, "record not found");
+        return commUtils.retRsp(rsp, 404, "Record not found");
     }
-    return commUtils.retRsp(rsp, 200, "deleted");
+    return commUtils.retRsp(rsp, 200, "Deleted");
 }
 
 module.exports = {addRecoveryRecord, updateRecoveryRecord, clearRecoveryRecords, fetchRecoveryRecords};

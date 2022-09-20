@@ -14,15 +14,15 @@ async function findAccount(mail) {
 
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "Invalid email");
     }
     if (typeof req.body.code != 'string') {
-      return commUtils.retRsp(rsp, 400, "no email verify code");
+      return commUtils.retRsp(rsp, 400, "Email verify code not exist.");
     }
 
     const codeValid = await verifyEmailCode(req.body.email, req.body.code);
     if (!codeValid) {
-      return commUtils.retRsp(rsp, 400, "code not valid");
+      return commUtils.retRsp(rsp, 400, "Code is not valid.");
     }
 
     const account = new Account({
@@ -90,7 +90,7 @@ async function updateAccount(req, rsp, next) {
 
   async function addAccountGuardian(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "invalid email");
+        return commUtils.retRsp(rsp, 400, "Invalid email");
     }
     var guardian = req.body.guardian;
     console.log("guardian will be added:",guardian);
@@ -118,7 +118,7 @@ async function updateAccount(req, rsp, next) {
         console.log("Msg",msg);
     }
     console.log();
-    return commUtils.retRsp(rsp, 200, "added");
+    return commUtils.retRsp(rsp, 200, "Added record successfully!");
 }
 
 
