@@ -158,7 +158,7 @@ async function getAccountGuardian(req, rsp, next) {
 async function delAccountGuardian(req, rsp, next) {
   const account = await Account.findOne({email: req.body.email});
   var msg = "";
-  if (account === null) {
+  if (!account) {
     msg = "Has no record of your Account:"+req.body.email;
   }
   var gIndex = (account.guardians).indexOf(req.body.guardian);
