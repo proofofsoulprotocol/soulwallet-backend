@@ -14,8 +14,10 @@ const GuardianSetting = require('./models/guardian-setting');
 const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
-const { addRecoveryRecord, fetchRecoveryRecords } = require("./api/recovery-records")
-const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require('./api/account');
+
+const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require(“./api/recovery-records”)
+const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require(‘./api/account’);
+
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 
@@ -67,7 +69,9 @@ const main = async () => {
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
+  app.post('/update-recovery-record', updateRecoveryRecord);
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
+  app.post('/clear-recovery-records', clearRecoveryRecords);
 
   // test
   app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
