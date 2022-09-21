@@ -162,20 +162,22 @@ async function getAccountGuardian(req, rsp, next) {
 async function delAccountGuardian(req, rsp, next) {
   const account = await Account.findOneAndUpdate(
     {email: req.body.email,wallet_address: req.body.wallet_address},
-    {$pop:{guardians:req.body.guardian }}
+    {$pull: {guardians: req.body.guardian }}
     );
   var msg = "";
   if (!account) {
-    msg = "Has no record of your Account:"+req.body.email;
+    msg = "Has no record of your Account:" + req.body.email;
+    return commUtils.retRsp(rsp, 404, msg);
   }
-  var gIndex = (account.guardians).indexOf(req.body.guardian);
-  if(gIndex>-1){
-    account.guardians[gIndex].pop;
-    await account.save();
+  var guardians = account.guardians;
+  if (guardians.indexOf(req.body.guardian) < 0) {
+    msg = req.body.guardian + " is not your guardian";
+    return commUtils.retRsp(rsp, 404, msg);
   }
-  rtData = account ? account.guardians : null ;
-  console.log("rtData:",rtData);
-  commUtils.retRsp(rsp, 200, msg, rtData);
+
+  guardians.remove(req.body.guardian);
+  msg = "Guardian " + req.body.guardian + " remove succeed";
+  commUtils.retRsp(rsp, 200, msg, guardians);
 }
 
 
