@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var config = require('./config');
 const commUtils = require('./utils/comm-utils');
 var indexRouter = require('./routes/index');
+const CORS = require('cors');
 const Account = require('./models/account');
 const Guardian = require('./models/guardian');
 const GuardianSetting = require('./models/guardian-setting');
@@ -34,6 +35,7 @@ const main = async () => {
 
   var app = express();
   app.use(logger('dev'));
+  app.use(CORS);
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
