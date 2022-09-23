@@ -6,8 +6,8 @@ var logger = require('morgan');
 var http = require('http');
 var mongoose = require('mongoose');
 var config = require('./config');
+const helmet = require("helmet");
 const commUtils = require('./utils/comm-utils');
-var indexRouter = require('./routes/index');
 const CORS = require('cors');
 const Account = require('./models/account');
 const Guardian = require('./models/guardian');
@@ -34,8 +34,9 @@ const main = async () => {
   console.log("ENV:",process.env.MONGODB_URI);
 
   var app = express();
+  app.use(helmet());
   app.use(logger('dev'));
-  app.use(CORS());
+  app.use(CORS(config.corsOption));
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
