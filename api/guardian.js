@@ -62,7 +62,8 @@ async function getPendingRecoveryRecord(req, rsp, next) {
   
   async function getGuardianWatchList(req, rsp, next) {
     const guardian = await Guardian.findOne( // unique guardian_address
-        {guardian_address: req.body.guardian_address});
+        {guardian_address: req.body.guardian_address}
+        );
     
     console.log("get result:",guardian);
     
