@@ -5,37 +5,39 @@ var commUtils = require("../utils/comm-utils");
 
 async function addGuardianWatchList(req, rsp, next) {
     var msg = "Oh no signal";
-    const guardianR = await Guardian.findOne({guardian_address: req.body.guardian_address}).then(
-        function(err, guardian){
-            console.log("query and get a guardian:",guardian);
-            if(!guardian){ // not exists, then insert new
-                console.log("guardian zero:",guardian);
+    const guardianR = await Guardian.findOne({guardian_address: req.body.guardian_address});
+    console.log("Query and get a guardian:",guardianR);
+    if(!guardianR)
+        { // not exists, then insert new
                     const guardianAdd = new Guardian({
                         guardian_address: req.body.guardian_address,
-                        wallet_address: req.body.wallet_address,
+                        watch_wallet_list: [req.body.wallet_address],
                     });
                     try{
                          guardianAdd.save();
-                         console.log("try to Add one!");
+                         console.log("try to Add one!",guardianAdd);
+                         return commUtils.retRsp(rsp, 200, msg, guardianAdd);
                     }
                     catch(error){
                         msg = "Insert new error";
                         console.log("Add new guardian error", error);
+                        return commUtils.retRsp(rsp, 502, msg, error);
                     }
             }else{
                 // if exists guardian, then depends on the wallet address exists or not
-                console.log("guardian has:",guardian);
-                var gIndex = (guardian.watch_wallet_list).indexOf(req.body.wallet_address);
+                console.log("guardian has:",guardianR);
+                var gIndex = (guardianR.watch_wallet_list).indexOf(req.body.wallet_address);
+                console.log("gIndex:",gIndex);
                 if(gIndex>-1){
                   msg ="The contract wallet address: "+req.body.wallet_address+ " you want to add has exists in your watch list."
+                  return commUtils.retRsp(rsp, 200, msg, guardianR);
                 }else{
-                    guardian.watch_wallet_list[gIndex+1] = wallet_address;
-                    guardian.save();
+                    guardianR.watch_wallet_list.push(req.body.wallet_address);
+                    guardianR.save();
+                    msg = "Add a new watch_wallet_list:"+req.body.wallet_address;
+                    return commUtils.retRsp(rsp, 200, msg, guardianR);
                 }
             }            
-        }
-    );
-    return commUtils.retRsp(rsp, 200, msg, guardianR);
 }
 
 // to be discuss: query each wallet_address on recovery record
