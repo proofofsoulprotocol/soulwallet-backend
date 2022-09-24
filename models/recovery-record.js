@@ -7,7 +7,12 @@ const recoveryRecordSchema = new mongoose.Schema({
     index: true,
     unique: true
   },
-
+  wallet_address: {
+    required: true,
+    type: String,
+    index: true,
+    unique: true
+  }, 
   new_key: {
     required: true,
     type: String 

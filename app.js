@@ -56,7 +56,7 @@ const main = async () => {
   app.post('/add-account-guardian', jwt, addAccountGuardian); // add new one, unique
   app.post('/get-account-guardian', jwt, getAccountGuardian); // get a array obj
   app.post('/del-account-guardian', jwt, delAccountGuardian); // get a array obj
-  app.post('/update-account-guardian', jwt, updateAccountGuardian);// replace old one with new
+  // app.post('/update-account-guardian', jwt, updateAccountGuardian);// replace old one with new
 
   // guardian-setting
   app.post('/add-guardian-setting', jwt, addGuardianSetting);
@@ -67,7 +67,7 @@ const main = async () => {
   app.post('/add-guardian-watch-list', jwt, addGuardianWatchList);
   app.post('/get-guardian-watch-list', jwt, getGuardianWatchList);
   app.post('/get-pending-recovery-record', jwt, getPendingRecoveryRecord);
-  app.post('/update-guardian-watch-list', jwt, updateGuardianWatchList);
+  // app.post('/update-guardian-watch-list', jwt, updateGuardianWatchList);
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
