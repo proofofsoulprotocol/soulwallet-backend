@@ -4,12 +4,16 @@ const commUtils = require("../utils/comm-utils");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const { verifyEmailCode } = require("./verify");
+const Account = require('../models/account');
 
 async function addRecoveryRecord(req, rsp, next) {
     // 1. verify code
     const verified = await verifyEmailCode(req.body.email, req.body.code);
     if (!verified) {
         return commUtils.retRsp(rsp, 400, "Code verify failed");
+    }
+    if (typeof req.body.new_key !== 'string') {
+        return commUtils.retRsp(rsp, 400, "Require new_key");
     }
 
     // 2. find existing
@@ -21,17 +25,31 @@ async function addRecoveryRecord(req, rsp, next) {
     }
 
     // 3. create records
-    // TODO: add guardian in array
+    const account = await Account.findOne({
+        email: req.body.email
+    });
+    if (!account) {
+        return commUtils.retRsp(rsp, 404, "Account not found");
+    }
+    const guardians = account.guardians;
+    var recovery_records = [];
+    for (var i = 0; i < guardians.length; i++) {
+        recovery_records.push({
+            guardian_address: guardians[i]
+        })
+    }
+
     const record = new RecoveryRecord({
         email: req.body.email,
         new_key: req.body.new_key,
-        wallet_address: req.body.wallet_address, // add owner's contract wallet_address
-        recovery_records: []
+        wallet_address: account.wallet_address, // add owner's contract wallet_address
+        recovery_records: recovery_records
     });
     await record.save();
 
     const jwtToken = jwt.sign({
-        wallet_address: req.body.email
+        email: req.body.email,
+        wallet_address: account.wallet_address,
     }, config.jwtKey, {expiresIn: config.jwtExpiresInSecond});
 
     return commUtils.retRsp(rsp, 200, "Added successfully!", {
@@ -78,14 +96,25 @@ async function fetchRecoveryRecords(req, rsp, next) {
     if (!rrRecord) {
         return commUtils.retRsp(rsp, 404, "Wallet address not found");
     }
-    const gsRecord = await Guardian_setting.findOne({email: req.body.email});
+
+    const total = rrRecord.recovery_records.length;
+    var signedNum = 0;
+    for (var i = 0; i < total; i++) {
+        if (rrRecord.recovery_records[i].signature) {
+            signedNum += 1;
+        }
+    }
+    const min = Math.floor(total / 2) + 1;
+
+    // const gsRecord = await Guardian_setting.findOne({email: req.body.email});
     const rtData = {
-        total: gsRecord.total,
-        min: gsRecord.min,
-        signedNum: rrRecord.guardians.length
+        total: total,
+        min: min,
+        signedNum: signedNum
     };
     return commUtils.retRsp(rsp, 200, "Success!", {
-        recovery_records: rtData
+        recovery_records: rrRecord.recovery_records,
+        requirements: rtData
     });
 }
 
