@@ -25,6 +25,7 @@ async function addRecoveryRecord(req, rsp, next) {
     const record = new RecoveryRecord({
         email: req.body.email,
         new_key: req.body.new_key,
+        wallet_address: req.body.wallet_address, // add owner's contract wallet_address
         recovery_records: []
     });
     await record.save();
