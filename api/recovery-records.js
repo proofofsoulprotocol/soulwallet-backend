@@ -114,7 +114,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
     };
     return commUtils.retRsp(rsp, 200, "Success!", {
         recovery_records: rrRecord.recovery_records,
-        requitements: rtData
+        requirements: rtData
     });
 }
 
