@@ -113,7 +113,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
         signedNum: signedNum
     };
     return commUtils.retRsp(rsp, 200, "Success!", {
-        recovery_records: rrRecord.recovery_records,
+        recoveryRecords: rrRecord,
         requirements: rtData
     });
 }
