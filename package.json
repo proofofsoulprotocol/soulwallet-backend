@@ -13,6 +13,8 @@
     "debug": "~2.6.9",
     "dotenv": "^16.0.2",
     "express": "~4.16.1",
+    "express-jwt": "^7.7.5",
+    "helmet": "^6.0.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",

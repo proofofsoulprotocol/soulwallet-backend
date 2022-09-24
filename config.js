@@ -21,4 +21,11 @@ config.jwtExpiresInSecond = 15 * 24 * 60 * 60; // 15 day
 config.verifyExpireMinutes = 30;
 config.verifyMaxResend = 10;
 
+config.corsOption = {
+    origin: [/\.soulwallets\.me$/, 'https://soulwallets.me', 'http://soulwallets.me',
+            /\.localhost:8000$/, '*', 'http://localhost:8000'],
+    credentials: true,
+    maxAge:  600,
+};
+
 module.exports = config;
