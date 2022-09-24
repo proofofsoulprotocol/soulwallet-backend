@@ -1,11 +1,13 @@
 var Account = require("../models/account");
 var commUtils = require("../utils/comm-utils");
-const Verification = require("../models/verification");
 const config = require("../config");
-const crypto = require("crypto");
+const axios = require("axios");
 
-
+// wallet_address, new_key, 
 async function triggerReplaceKey(req, rsp, next) {
+  
+  const baseUrl = config.baseUrl;
+  
   var exists = false;
   const result = await Account.find({email: req.body.email});
   if (result.length > 0) {

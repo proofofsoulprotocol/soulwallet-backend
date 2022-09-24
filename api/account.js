@@ -97,7 +97,7 @@ async function updateAccount(req, rsp, next) {
 
     const account = await Account.findOne({email: req.body.email, wallet_address: req.body.wallet_address});
     var msg = "";
-    if (account === null) {
+    if (!account) {
       msg = "Has no record of your mail and wallet_address:"+req.body.email+":::"+ req.body.wallet_address;
       return commUtils.retRsp(rsp, 404, msg);
     }
