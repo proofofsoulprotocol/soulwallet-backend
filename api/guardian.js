@@ -42,21 +42,21 @@ async function addGuardianWatchList(req, rsp, next) {
 
 // to be discuss: query each wallet_address on recovery record
 async function getPendingRecoveryRecord(req, rsp, next) {
-    const guardian = await Guardian.findOne(
-        {guardian_address: req.body.guardian_address}, function(error, guardian)
-        {
-            console.log("get result:",guardian);
-            RecoveryRecord.find({wallet_address: {$in: guardian.watch_wallet_list}},
-                function(error, recoveryRecords){
-                    console.log("recoveryRecords:",recoveryRecords);
-                });
-        }
-    );
+    const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
+    // console.log("guardian:"+req.body.guardian_address,guardian);
+    const  watch_wallet_list =  guardian.watch_wallet_list;
+    var rtData = [];
+    watch_wallet_list.forEach(element => {
+        console.log(element);
+        const rRecord = RecoveryRecord.find({wallet_address: element});
+        console.log(rRecord);
+        rtData.push(rRecord);
+    });
     
-    var msg = recoveryRecords ? "Query successfully!" : "Query failed!";
+    var msg = rtData ? "Query successfully!" : "Query failed!";
     return commUtils.retRsp(rsp, 200, msg, {
-        params: recoveryRecords,
-        success: recoveryRecords ? true : false,
+        params: rtData,
+        success: rtData ? true : false,
     });
   }
   
@@ -71,6 +71,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
     return commUtils.retRsp(rsp, 200, msg, guardian);
   }
 
+// Deprecated this function
 // It will update with filter: email and wallet_address 
 // and replace the database record by your specific post value
 async function updateGuardianWatchList(req, rsp, next) {
