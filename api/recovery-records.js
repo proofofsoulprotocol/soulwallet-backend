@@ -96,14 +96,25 @@ async function fetchRecoveryRecords(req, rsp, next) {
     if (!rrRecord) {
         return commUtils.retRsp(rsp, 404, "Wallet address not found");
     }
-    const gsRecord = await Guardian_setting.findOne({email: req.body.email});
+
+    const total = rrRecord.recovery_records.length;
+    var signedNum = 0;
+    for (var i = 0; i < total; i++) {
+        if (rrRecord.recovery_records[i].signature) {
+            signedNum += 1;
+        }
+    }
+    const min = Math.floor(total / 2) + 1;
+
+    // const gsRecord = await Guardian_setting.findOne({email: req.body.email});
     const rtData = {
-        total: gsRecord.total,
-        min: gsRecord.min,
-        signedNum: rrRecord.guardians.length
+        total: total,
+        min: min,
+        signedNum: signedNum
     };
     return commUtils.retRsp(rsp, 200, "Success!", {
-        recovery_records: rtData
+        recovery_records: rrRecord.recovery_records,
+        requitements: rtData
     });
 }
 
