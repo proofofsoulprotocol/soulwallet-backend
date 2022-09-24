@@ -64,10 +64,10 @@ const main = async () => {
   app.post('/get-guardian-setting', jwt, updateGuardianSetting); //todo
 
   // guardian, show the list guardians seen in the security center
-  app.post('/add-guardian-watch-list', jwt, addGuardianWatchList);
-  app.post('/get-guardian-watch-list', jwt, getGuardianWatchList);
-  app.post('/get-pending-recovery-record', jwt, getPendingRecoveryRecord);
-  // app.post('/update-guardian-watch-list', jwt, updateGuardianWatchList);
+  app.post('/add-guardian-watch-list', addGuardianWatchList);
+  app.post('/get-guardian-watch-list', getGuardianWatchList);
+  app.post('/get-pending-recovery-record', getPendingRecoveryRecord);
+  app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
