@@ -44,29 +44,34 @@ async function addGuardianWatchList(req, rsp, next) {
 async function getPendingRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
-    const  watch_wallet_list =  guardian.watch_wallet_list;
-    var rtData = [];
-    for(i=0;i<watch_wallet_list.length;i++){
-        console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
-        const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i]});
-        if(rRecord){
-            console.log(rRecord.wallet_address);
-            rtData.push({guardian_address: req.body.guardian_address, wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
+    if(guardian){
+        const  watch_wallet_list =  guardian.watch_wallet_list;
+        var rtData = [];
+        for(i=0;i<watch_wallet_list.length;i++){
+            console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
+            const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i]});
+            if(rRecord){
+                console.log(rRecord.wallet_address);
+                rtData.push({guardian_address: req.body.guardian_address, wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
+            }
         }
+        // It will return two dimension array like [0][recovery_record]
+        var msg = rtData ? "Query successfully!" : "Query failed!";
+        return commUtils.retRsp(rsp, 200, msg, {
+            params: rtData,
+            success: rtData ? true : false,
+        });        
     }
-    // It will return two dimension array like [0][recovery_record]
-    var msg = rtData ? "Query successfully!" : "Query failed!";
-    return commUtils.retRsp(rsp, 200, msg, {
-        params: rtData,
-        success: rtData ? true : false,
-    });
+    return commUtils.retRsp(rsp, 200, "Has no guardian record.", {
+        params: null,
+        success: false,
+    });  
   }
   
   async function getGuardianWatchList(req, rsp, next) {
     const guardian = await Guardian.findOne( // unique guardian_address
         {guardian_address: req.body.guardian_address}
         );
-    
     console.log("get result:",guardian);
     
     var msg = guardian ? "Find successfully!" : "Find failed!";
