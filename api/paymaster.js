@@ -1,19 +1,24 @@
 var Account = require("../models/account");
-var commUtils = require("../utils/comm-utils");
-const Verification = require("../models/verification");
 const config = require("../config");
-const crypto = require("crypto");
+const axios = require("axios");
 
-
-async function triggerReplaceKey(req, rsp, next) {
-  var exists = false;
-  const result = await Account.find({email: req.body.email});
-  if (result.length > 0) {
-    exists = true;
+// wallet_address, new_key, recovery_records(guardian_address, signature)
+// It will invoked by the updateRecoveryRecord when the condition meets the 2/3.
+async function triggerReplaceKey(wallet_address, new_key, recovery_record) {
+  
+  const baseUrl = config.baseUrl;
+  var postData = {
+    "wallet_address": wallet_address,
+    "new_key": new_key,
+    "recovery_record": recovery_record
   }
-  return commUtils.retRsp(rsp, 200, "", {
-    exists: exists
-  });
+  const methodName = "triggerReplaceOnChainKey";
+  const rtData = await axios.post(baseUrl+methodName, postData).then((response)=>{
+      console.log(response.data);
+    }).catch((error)=>{
+      console.log(error);
+    });
+  return rtData;
 }
 
 
