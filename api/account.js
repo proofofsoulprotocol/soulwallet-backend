@@ -4,6 +4,7 @@ const { validateEmail} = require("../utils/email-utils");
 const config = require("../config");
 const { verifyEmailCode } = require('./verify');
 const jwt = require('jsonwebtoken');
+const {addGuardianWatchListFunc, delGuardianWatchListFunc} = require('./guardian');
 // const crypto = require("crypto");
 // addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
@@ -38,7 +39,6 @@ async function addAccount(req, rsp, next) {
         console.log("error:",error);
     }
 
-    console.log(config.jwtKey);
     jwtToken = jwt.sign({
       email: req.body.email,
       wallet_address: req.body.wallet_address
@@ -88,7 +88,7 @@ async function updateAccount(req, rsp, next) {
     })
   }
 
-  async function addAccountGuardian(req, rsp, next) {
+async function addAccountGuardian(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "Invalid email");
     }
@@ -116,8 +116,9 @@ async function updateAccount(req, rsp, next) {
         msg="Add guardian record error";
         console.log("Error Obj:",update_guardian);
         console.log("Msg",msg);
+        return commUtils.retRsp(rsp, 400, msg);
     }
-    console.log();
+    await addGuardianWatchListFunc(req.body.wallet_address, req.body.guardian);
     return commUtils.retRsp(rsp, 200, "Added record successfully!");
 }
 
@@ -176,6 +177,7 @@ async function delAccountGuardian(req, rsp, next) {
   }
 
   guardians.remove(req.body.guardian);
+  await delGuardianWatchListFunc(req.body.wallet_address, req.body.guardian);
   msg = "Guardian " + req.body.guardian + " remove succeed";
   commUtils.retRsp(rsp, 200, msg, guardians);
 }
