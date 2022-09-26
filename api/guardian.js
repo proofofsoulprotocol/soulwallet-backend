@@ -61,7 +61,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
         return commUtils.retRsp(rsp, 200, msg, rtData);        
     }
     return commUtils.retRsp(rsp, 200, "Has no guardian record.", {
-        data: []
+        data: rtData
     });  
   }
   
