@@ -2,6 +2,39 @@ var Guardian = require("../models/guardian");
 const RecoveryRecord = require("../models/recovery-record");
 var commUtils = require("../utils/comm-utils");
 
+const addGuardianWatchListFunc = async (wallet_address, guardian_address) => {
+    var guardianR = await Guardian.findOne({guardian_address: guardian_address});
+    if (!guardianR) {
+        guardianR = new Guardian({
+            guardian_address: guardian_address,
+            watch_wallet_list: [],
+        });
+    }
+
+    var gIndex = (guardianR.watch_wallet_list).indexOf(wallet_address);
+    if(gIndex > -1){
+        msg = "The contract wallet address: "+wallet_address+ " you want to add has exists in your watch list."
+        console.log(msg);
+    } else {
+        guardianR.watch_wallet_list.push(wallet_address);
+        await guardianR.save();
+    }
+
+    console.log("saved");
+};
+
+const delGuardianWatchListFunc = async (wallet_address, guardian_address) => {
+    var guardianR = await Guardian.findOne({guardian_address: guardian_address});
+    if (!guardianR) {
+        console.log("guardian_address not found " + guardian_address);
+        return;
+    }
+
+    guardianR.watch_wallet_list = guardianR.watch_wallet_list.filter(w => w != wallet_address);
+    await guardianR.save();
+    console.log("deleted");
+};
+
 
 async function addGuardianWatchList(req, rsp, next) {
     var msg = "Oh no signal";
@@ -67,15 +100,15 @@ async function getPendingRecoveryRecord(req, rsp, next) {
     });  
   }
   
-  async function getGuardianWatchList(req, rsp, next) {
-    const guardian = await Guardian.findOne( // unique guardian_address
-        {guardian_address: req.body.guardian_address}
-        );
-    console.log("get result:",guardian);
-    
-    var msg = guardian ? "Find successfully!" : "Find failed!";
-    return commUtils.retRsp(rsp, 200, msg, guardian);
-  }
+async function getGuardianWatchList(req, rsp, next) {
+const guardian = await Guardian.findOne( // unique guardian_address
+    {guardian_address: req.body.guardian_address}
+    );
+console.log("get result:",guardian);
+
+var msg = guardian ? "Find successfully!" : "Find failed!";
+return commUtils.retRsp(rsp, 200, msg, guardian);
+}
 
 // Deprecated this function
 // It will update with filter: email and wallet_address 
@@ -95,7 +128,9 @@ async function updateGuardianWatchList(req, rsp, next) {
         params: guardianSetting,
         update: guardianSetting ? true : false
     });
-  }
+}
 
 
-module.exports = {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, updateGuardianWatchList};
+module.exports = {addGuardianWatchList, getGuardianWatchList,
+    getPendingRecoveryRecord, updateGuardianWatchList,
+    addGuardianWatchListFunc, delGuardianWatchListFunc};
