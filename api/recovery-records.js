@@ -107,14 +107,14 @@ async function fetchRecoveryRecords(req, rsp, next) {
     const min = Math.floor(total / 2) + 1;
 
     // const gsRecord = await Guardian_setting.findOne({email: req.body.email});
-    const rtData = {
+    const requirements = {
         total: total,
         min: min,
         signedNum: signedNum
     };
     return commUtils.retRsp(rsp, 200, "Success!", {
         recoveryRecords: rrRecord,
-        requirements: rtData
+        requirements: requirements
     });
 }
 
