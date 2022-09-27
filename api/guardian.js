@@ -87,9 +87,9 @@ async function getPendingRecoveryRecord(req, rsp, next) {
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
         const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i], status: "pending"});
         if(rRecord){
-            console.log(rRecord.wallet_address);
-            var item = {
-                wallet_address:watch_wallet_list[i],
+            console.log(rRecord.wallet_address, watch_wallet_list[i]);
+            let item = {
+                wallet_address: rRecord.wallet_address,
                 new_key: rRecord.new_key
             };
             // rRecord.recovery_records.forEach(r => {
@@ -131,7 +131,7 @@ async function getHistoryRecoveryRecord(req, rsp, next) {
         const rRecords = await RecoveryRecord.find({wallet_address: watch_wallet_list[i], status: "finished"});
         rRecords.forEach(record => {
             rtData.push({
-                wallet_address: watch_wallet_list[i],
+                wallet_address: rRecords.wallet_address,
                 new_key: record.new_key
             })
         });
