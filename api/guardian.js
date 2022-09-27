@@ -100,10 +100,10 @@ async function getPendingRecoveryRecord(req, rsp, next) {
             //     }
             // });
 
-            for(i=0;i<rRecord.recovery_records.length;i++){
-                if (rRecord.recovery_records[i].guardian_address === req.body.guardian_address) {
-                    if (rRecord.recovery_records[i].signature) {
-                        item.signature = rRecord.recovery_records[i].signature;
+            for(j=0;j<rRecord.recovery_records.length;j++){
+                if (rRecord.recovery_records[j].guardian_address === req.body.guardian_address) {
+                    if (rRecord.recovery_records[j].signature) {
+                        item.signature = rRecord.recovery_records[j].signature;
                     }
                 }
             }
