@@ -92,13 +92,22 @@ async function getPendingRecoveryRecord(req, rsp, next) {
                 wallet_address:watch_wallet_list[i],
                 new_key: rRecord.new_key
             };
-            rRecord.recovery_records.forEach(r => {
-                if (r.guardian_address === req.body.guardian_address) {
-                    if (r.signature) {
-                        item.signature = r.signature;
+            // rRecord.recovery_records.forEach(r => {
+            //     if (r.guardian_address === req.body.guardian_address) {
+            //         if (r.signature) {
+            //             item.signature = r.signature;
+            //         }
+            //     }
+            // });
+
+            for(j=0;j<rRecord.recovery_records.length;j++){
+                if (rRecord.recovery_records[j].guardian_address === req.body.guardian_address) {
+                    if (rRecord.recovery_records[j].signature) {
+                        item.signature = rRecord.recovery_records[j].signature;
                     }
                 }
-            });
+            }
+
             rtData.push(item);
             // rtData.push({wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
         }

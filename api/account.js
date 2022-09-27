@@ -77,7 +77,6 @@ async function updateAccount(req, rsp, next) {
   }
 
   async function isWalletOwner(req, rsp, next) {
-    var exists = false;
     const result = await Account.find({email: req.body.email});
     if (result.length < 1) {
       return commUtils.retRsp(rsp, 502, "No record", result);
