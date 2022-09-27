@@ -4,15 +4,17 @@ const recoveryRecordSchema = new mongoose.Schema({
   email: {
     required: true,
     type: String,
-    index: true,
-    unique: true
+    index: true
   },
   wallet_address: {
     required: true,
     type: String,
-    index: true,
-    unique: true
+    index: true
   }, 
+  status: {
+    require: true,
+    type: String
+  },
   new_key: {
     required: true,
     type: String 

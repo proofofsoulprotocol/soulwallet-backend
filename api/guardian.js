@@ -77,27 +77,61 @@ async function addGuardianWatchList(req, rsp, next) {
 async function getPendingRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
-    if(guardian){
-        const  watch_wallet_list =  guardian.watch_wallet_list;
-        var rtData = [];
-        for(i=0;i<watch_wallet_list.length;i++){
-            console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
-            const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i]});
-            if(rRecord){
-                console.log(rRecord.wallet_address);
-                // rtData.push({wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
-                rtData.push({wallet_address:watch_wallet_list[i]});
-            }
-        }
-        // It will return two dimension array like [0][recovery_record]
-        var msg = rtData ? "Query successfully!" : "Query failed!";
-        return commUtils.retRsp(rsp, 200, msg, rtData);        
+    var rtData = [];
+    if (!guardian) {
+        return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
     }
-    return commUtils.retRsp(rsp, 200, "Has no guardian record.", {
-        data: rtData
-    });  
-  }
-  
+    
+    const watch_wallet_list =  guardian.watch_wallet_list;
+    for(i = 0; i < watch_wallet_list.length; i++){
+        console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
+        const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i], status: "pending"});
+        if(rRecord){
+            console.log(rRecord.wallet_address);
+            var item = {
+                wallet_address:watch_wallet_list[i],
+                new_key: rRecord.new_key
+            };
+            rRecord.recovery_records.forEach(r => {
+                if (r.guardian_address === req.body.guardian_address) {
+                    if (r.signature) {
+                        item.signature = r.signature;
+                    }
+                }
+            });
+            rtData.push(item);
+            // rtData.push({wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
+        }
+    }
+    // It will return two dimension array like [0][recovery_record]
+    var msg = rtData ? "Query successfully!" : "Query failed!";
+    return commUtils.retRsp(rsp, 200, msg, rtData);
+}
+
+async function getHistoryRecoveryRecord(req, rsp, next) {
+    const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
+    // console.log("guardian:"+req.body.guardian_address,guardian);
+    var rtData = [];
+    if (!guardian) {
+        return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
+    }
+
+    const watch_wallet_list =  guardian.watch_wallet_list;
+    for(i = 0; i < watch_wallet_list.length; i++){
+        console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
+        const rRecords = await RecoveryRecord.find({wallet_address: watch_wallet_list[i], status: "finished"});
+        rRecords.forEach(record => {
+            rtData.push({
+                wallet_address: watch_wallet_list[i],
+                new_key: record.new_key
+            })
+        });
+    }
+    // It will return two dimension array like [0][recovery_record]
+    var msg = rtData ? "Query successfully!" : "Query failed!";
+    return commUtils.retRsp(rsp, 200, msg, rtData);
+} 
+
 async function getGuardianWatchList(req, rsp, next) {
 const guardian = await Guardian.findOne( // unique guardian_address
     {guardian_address: req.body.guardian_address}
@@ -130,5 +164,5 @@ async function updateGuardianWatchList(req, rsp, next) {
 
 
 module.exports = {addGuardianWatchList, getGuardianWatchList,
-    getPendingRecoveryRecord, updateGuardianWatchList,
+    getPendingRecoveryRecord, getHistoryRecoveryRecord, updateGuardianWatchList,
     addGuardianWatchListFunc, delGuardianWatchListFunc};

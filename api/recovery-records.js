@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config");
 const { verifyEmailCode } = require("./verify");
 const Account = require('../models/account');
+const {triggerReplaceKey} = require("./paymaster");
 
 async function addRecoveryRecord(req, rsp, next) {
     // 1. verify code
@@ -18,10 +19,11 @@ async function addRecoveryRecord(req, rsp, next) {
 
     // 2. find existing
     const result = await RecoveryRecord.findOne({
-        email: req.body.email
+        email: req.body.email,
+        status: "pending"
     });
     if (result) {
-        return commUtils.retRsp(rsp, 400, "Recovery record already exists");
+        return commUtils.retRsp(rsp, 400, "Pending recovery record already exists");
     }
 
     // 3. create records
@@ -38,10 +40,15 @@ async function addRecoveryRecord(req, rsp, next) {
             guardian_address: guardians[i]
         })
     }
+    var status = "pending";
+    if (guardians.length === 0) {
+        status = "finished";
+    }
 
     const record = new RecoveryRecord({
         email: req.body.email,
         new_key: req.body.new_key,
+        status: status,
         wallet_address: account.wallet_address, // add owner's contract wallet_address
         recovery_records: recovery_records
     });
@@ -61,24 +68,40 @@ async function addRecoveryRecord(req, rsp, next) {
 async function updateRecoveryRecord(req, rsp, triggerPaymasterReplace) {
     // TODO: validate signature
     const result = await RecoveryRecord.findOne({
-        email: req.body.email
+        email: req.body.email,
+        status: "pending"
     });
     if (!result) {
         return commUtils.retRsp(rsp, 404, "Recovery record not found");
     }
 
     updated = false;
-    for (var i = 0; i < result.recovery_records.length; i++) {
+    const total = result.recovery_records.length;
+    const min = Math.floor(total / 2) + 1;
+    var signedNum = 0;
+    for (var i = 0; i < total; i++) {
         if (result.recovery_records[i].guardian_address === req.body.guardian_address) {
             // update signature
             result.recovery_records[i].signature = req.body.signature;
             updated = true;
         }
+        if (result.recovery_records[i].signature) {
+            signedNum ++;
+        }
     }
     if (!updated) {
         return commUtils.retRsp(rsp, 400, "Guardian not in list");
     }
-
+    if (signedNum >= min) {
+        result.status = "finished";
+        // TODO: call trigger pay master
+        try {
+            const result = await triggerReplaceKey(result.wallet_address,
+                result.new_key, result.recovery_records);
+        } catch (err) {
+            console.log("triggerReplaceKey error:", err);
+        }
+    }
     await result.save();
 
     return commUtils.retRsp(rsp, 200, "Updated!");
