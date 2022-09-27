@@ -77,12 +77,12 @@ async function addGuardianWatchList(req, rsp, next) {
 async function getPendingRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
+    var rtData = [];
     if (!guardian) {
         return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
     }
     
     const watch_wallet_list =  guardian.watch_wallet_list;
-    var rtData = [];
     for(i = 0; i < watch_wallet_list.length; i++){
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
         const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i], status: "pending"});
