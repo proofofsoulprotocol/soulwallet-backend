@@ -65,10 +65,10 @@ async function addRecoveryRecord(req, rsp, next) {
 }
 
 
-async function updateRecoveryRecord(req, rsp, triggerPaymasterReplace) {
+async function updateRecoveryRecord(req, rsp, next) {
     // TODO: validate signature
     const result = await RecoveryRecord.findOne({
-        email: req.body.email,
+        wallet_address: req.body.wallet_address,
         status: "pending"
     });
     if (!result) {
@@ -95,12 +95,12 @@ async function updateRecoveryRecord(req, rsp, triggerPaymasterReplace) {
     if (signedNum >= min) {
         result.status = "finished";
         // TODO: call trigger pay master
-        try {
-            const result = await triggerReplaceKey(result.wallet_address,
-                result.new_key, result.recovery_records);
-        } catch (err) {
-            console.log("triggerReplaceKey error:", err);
-        }
+        // try {
+        //     const result = await triggerReplaceKey(result.wallet_address,
+        //         result.new_key, result.recovery_records);
+        // } catch (err) {
+        //     console.log("triggerReplaceKey error:", err);
+        // }
     }
     await result.save();
 
@@ -114,7 +114,8 @@ function triggerPaymasterReplace(email, wallet_address, new_key){
 
 async function fetchRecoveryRecords(req, rsp, next) {
     const rrRecord = await RecoveryRecord.findOne({
-        email: req.body.email
+        wallet_address: req.body.wallet_address,
+        new_key: req.body.new_key
     });
     if (!rrRecord) {
         return commUtils.retRsp(rsp, 404, "Wallet address not found");
