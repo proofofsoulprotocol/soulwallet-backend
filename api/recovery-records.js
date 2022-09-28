@@ -50,7 +50,8 @@ async function addRecoveryRecord(req, rsp, next) {
         new_key: req.body.new_key,
         status: status,
         wallet_address: account.wallet_address, // add owner's contract wallet_address
-        recovery_records: recovery_records
+        recovery_records: recovery_records,
+        request_id: req.body.request_id
     });
     await record.save();
 

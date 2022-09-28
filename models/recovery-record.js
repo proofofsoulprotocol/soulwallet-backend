@@ -28,6 +28,10 @@ const recoveryRecordSchema = new mongoose.Schema({
     signature: {
       require: true,
       type: String
+    },
+    request_id: {
+      require: false,
+      type: String
     }
   }]
 });
