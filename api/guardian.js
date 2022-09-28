@@ -87,7 +87,8 @@ async function getPendingRecoveryRecord(req, rsp, next) {
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
         const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i], status: "pending"});
         if(rRecord){
-            console.log(rRecord.wallet_address);
+            console.log("rRecord", rRecord.wallet_address);
+            console.log("watch_wallet_list[i]", watch_wallet_list[i]);
             var item = {
                 wallet_address:watch_wallet_list[i],
                 new_key: rRecord.new_key
