@@ -92,23 +92,15 @@ async function getPendingRecoveryRecord(req, rsp, next) {
                 wallet_address: rRecord.wallet_address,
                 new_key: rRecord.new_key
             };
-            // rRecord.recovery_records.forEach(r => {
-            //     if (r.guardian_address === req.body.guardian_address) {
-            //         if (r.signature) {
-            //             item.signature = r.signature;
-            //         }
-            //     }
-            // });
 
             for(j=0;j<rRecord.recovery_records.length;j++){
                 if (rRecord.recovery_records[j].guardian_address === req.body.guardian_address) {
-                    if (rRecord.recovery_records[j].signature) {
-                        item.signature = rRecord.recovery_records[j].signature;
+                    if (!rRecord.recovery_records[j].signature) {
+                        rtData.push(item);
                     }
                 }
             }
 
-            rtData.push(item);
             // rtData.push({wallet_address:watch_wallet_list[i], recovery_records: rRecord.recovery_records});
         }
     }
@@ -117,7 +109,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
     return commUtils.retRsp(rsp, 200, msg, rtData);
 }
 
-async function getHistoryRecoveryRecord(req, rsp, next) {
+async function getSignedRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
     var rtData = [];
@@ -128,11 +120,16 @@ async function getHistoryRecoveryRecord(req, rsp, next) {
     const watch_wallet_list =  guardian.watch_wallet_list;
     for(i = 0; i < watch_wallet_list.length; i++){
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
-        const rRecords = await RecoveryRecord.find({wallet_address: watch_wallet_list[i], status: "finished"});
+        const rRecords = await RecoveryRecord.find({wallet_address: watch_wallet_list[i]});
         rRecords.forEach(record => {
-            rtData.push({
-                wallet_address: rRecords.wallet_address,
-                new_key: record.new_key
+            record.recovery_records.forEach(recovery_record => {
+                if (recovery_record.guardian_address === req.body.guardian_address && recovery_record.signature) {
+                    rtData.push({
+                        wallet_address: rRecords.wallet_address,
+                        new_key: record.new_key,
+                        signature: recovery_record.signature
+                    })
+                }
             })
         });
     }
@@ -173,5 +170,5 @@ async function updateGuardianWatchList(req, rsp, next) {
 
 
 module.exports = {addGuardianWatchList, getGuardianWatchList,
-    getPendingRecoveryRecord, getHistoryRecoveryRecord, updateGuardianWatchList,
+    getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList,
     addGuardianWatchListFunc, delGuardianWatchListFunc};

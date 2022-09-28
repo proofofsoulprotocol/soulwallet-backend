@@ -12,7 +12,7 @@ const accountSchema = new mongoose.Schema({
         required: false,
         type: String,
         index: true,
-        unique: false, // todo 
+        unique: true, // todo 
     },
     guardians: {
         required: false,

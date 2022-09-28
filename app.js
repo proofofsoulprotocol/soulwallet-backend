@@ -19,7 +19,7 @@ const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify
 const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
 const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
-const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getHistoryRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
+const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 
 var port = process.env.PORT || 3000;
 
@@ -67,7 +67,7 @@ const main = async () => {
   app.post('/add-guardian-watch-list', addGuardianWatchList);
   app.post('/get-guardian-watch-list', getGuardianWatchList);
   app.post('/get-pending-recovery-record', getPendingRecoveryRecord);
-  app.post('/get-history-recovery-record', getHistoryRecoveryRecord);
+  app.post('/get-signed-recovery-record', getSignedRecoveryRecord);
   app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
