@@ -72,9 +72,9 @@ const main = async () => {
 
   // recovery record
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
-  app.post('/update-recovery-record', jwt, updateRecoveryRecord);
-  app.post('/fetch-recovery-records', jwt, fetchRecoveryRecords);
-  app.post('/clear-recovery-records', jwt, clearRecoveryRecords);
+  app.post('/update-recovery-record', updateRecoveryRecord);
+  app.post('/fetch-recovery-records', fetchRecoveryRecords);
+  app.post('/clear-recovery-records', clearRecoveryRecords);
 
   // test
   app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
