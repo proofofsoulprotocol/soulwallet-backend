@@ -37,6 +37,8 @@ async function addAccount(req, rsp, next) {
     catch (error) {
         msg="Save record error";
         console.log("error:",error);
+        console.log("account:", account);
+        console.log("accountToSave:",accountToSave);
     }
 
     jwtToken = jwt.sign({
@@ -81,7 +83,7 @@ async function updateAccount(req, rsp, next) {
     if (result.length < 1) {
       return commUtils.retRsp(rsp, 502, "No record", result);
     }
-    return commUtils.retRsp(rsp, 200, "Find one record", result);
+    return commUtils.retRsp(rsp, 200, "Find your record:", result);
   }
 
 async function addAccountGuardian(req, rsp, next) {

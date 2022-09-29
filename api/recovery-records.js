@@ -117,6 +117,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
     const rrRecord = await RecoveryRecord.findOne({
         new_key: req.body.new_key
     });
+    console.log("rrRecord:",rrRecord);
     if (!rrRecord) {
         return commUtils.retRsp(rsp, 404, "record not found");
     }
