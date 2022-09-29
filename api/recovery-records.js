@@ -115,11 +115,11 @@ function triggerPaymasterReplace(email, wallet_address, new_key){
 
 async function fetchRecoveryRecords(req, rsp, next) {
     const rrRecord = await RecoveryRecord.findOne({
-        wallet_address: req.body.wallet_address,
+        email: req.body.email,
         new_key: req.body.new_key
     });
     if (!rrRecord) {
-        return commUtils.retRsp(rsp, 404, "Wallet address not found");
+        return commUtils.retRsp(rsp, 404, "record not found");
     }
 
     const total = rrRecord.recovery_records.length;
