@@ -19,6 +19,10 @@ const recoveryRecordSchema = new mongoose.Schema({
     required: true,
     type: String 
   },
+  request_id: {
+    require: true,
+    type: String
+  },
 
   recovery_records: [{
     guardian_address: {
@@ -28,11 +32,11 @@ const recoveryRecordSchema = new mongoose.Schema({
     signature: {
       require: true,
       type: String
-    },
-    request_id: {
-      require: false,
-      type: String
-    }
+    }//,
+    // request_id: {
+    //   require: false,
+    //   type: String
+    // }
   }]
 });
 
