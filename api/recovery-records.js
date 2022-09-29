@@ -119,7 +119,7 @@ async function fetchRecoveryRecords(req, rsp, next) {
         new_key: req.body.new_key
     });
     if (!rrRecord) {
-        return commUtils.retRsp(rsp, 404, "record not found");
+        return commUtils.retRsp(rsp, 404, "Record not found");
     }
 
     const total = rrRecord.recovery_records.length;
