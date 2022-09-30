@@ -54,6 +54,16 @@ async function getAccounts(req, rsp, next) {
   return commUtils(rsp, 200, "", accounts);
 }
 
+async function getWalletAddress(req, rsp, next) {
+  const account = await Account.findOne( {email: req.body.email});
+  if (!account) {
+    return commUtils.retRsp(rsp, 404, "Account not found");
+  }
+  return commUtils.retRsp(rsp, 200, "Success", {
+    wallet_address: account.wallet_address
+  });
+}
+
 // async function updateAccountGuardian(req, rsp, next) {
 //   var exists = false;
 //   const result = await Account.find({email: req.body.email});
@@ -187,4 +197,4 @@ async function delAccountGuardian(req, rsp, next) {
 
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, getAccounts, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
+module.exports = {addAccount, getWalletAddress, getAccounts, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
