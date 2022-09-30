@@ -49,6 +49,11 @@ async function addAccount(req, rsp, next) {
     });
 }
 
+async function getAccounts(req, rsp, next) {
+  const accounts = await Account.find({ email: req.body.email });
+  return commUtils(rsp, 200, "", accounts);
+}
+
 // async function updateAccountGuardian(req, rsp, next) {
 //   var exists = false;
 //   const result = await Account.find({email: req.body.email});
@@ -182,4 +187,4 @@ async function delAccountGuardian(req, rsp, next) {
 
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
+module.exports = {addAccount, getAccounts, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
