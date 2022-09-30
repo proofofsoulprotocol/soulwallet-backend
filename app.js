@@ -51,7 +51,7 @@ const main = async () => {
   // acount
   app.post('/add-account', addAccount); // express produce a JWT and return
   app.post('/is-wallet-owner', isWalletOwner);
-  app.post('/update-account', updateAccount); //update account's wallet_address and guardians
+  app.post('/update-account', jwt, updateAccount); //update account's wallet_address and guardians
   // acount guardian
   app.post('/add-account-guardian', jwt, addAccountGuardian); // add new one, unique
   app.post('/get-account-guardian', jwt, getAccountGuardian); // get a array obj
