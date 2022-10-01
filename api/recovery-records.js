@@ -95,13 +95,10 @@ async function updateRecoveryRecord(req, rsp, next) {
     }
     if (signedNum >= min) {
         result.status = "finished";
-        // TODO: call trigger pay master
-        // try {
-        //     const result = await triggerReplaceKey(result.wallet_address,
-        //         result.new_key, result.recovery_records);
-        // } catch (err) {
-        //     console.log("triggerReplaceKey error:", err);
-        // }
+        // update wallet key
+        const update_result = await Account.findOneAndUpdate({ wallet_address: req.body.wallet_address},
+            {key: result.new_key});
+        console.log("update new key: " + result.new_key);
     }
     await result.save();
 

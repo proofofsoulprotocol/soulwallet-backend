@@ -28,7 +28,8 @@ async function addAccount(req, rsp, next) {
 
     const account = new Account({
         email: req.body.email, // one email, one wallet
-        wallet_address: req.body.wallet_address
+        wallet_address: req.body.wallet_address,
+        key: req.body.key
     })
     var msg = "Add record successfully.";
     try {
@@ -57,11 +58,19 @@ async function getAccounts(req, rsp, next) {
 }
 
 async function getWalletAddress(req, rsp, next) {
-  const account = await Account.findOne( {email: req.body.email});
+  let account;
+  let msg = "";
+  if (req.body.email) {
+    msg = "Find by email";
+    account = await Account.findOne({email: req.body.email});
+  } else if (req.body.key) {
+    msg = "Find by key";
+    account = await Account.findOne({key: req.body.key});
+  }
   if (!account) {
     return commUtils.retRsp(rsp, 404, "Account not found");
   }
-  return commUtils.retRsp(rsp, 200, "Success", {
+  return commUtils.retRsp(rsp, 200, msg, {
     wallet_address: account.wallet_address
   });
 }
