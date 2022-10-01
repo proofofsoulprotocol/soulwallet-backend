@@ -75,6 +75,10 @@ async function addGuardianWatchList(req, rsp, next) {
 
 // to be discuss: query each wallet_address on recovery record
 async function getPendingRecoveryRecord(req, rsp, next) {
+    if (!req.body.guardian_address) {
+        return commUtils.retRsp(rsp, 400, "Empty guardian_address");
+    }
+
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
     let rtData = [];
