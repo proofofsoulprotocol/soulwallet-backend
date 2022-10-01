@@ -77,7 +77,7 @@ async function addGuardianWatchList(req, rsp, next) {
 async function getPendingRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
-    var rtData = [];
+    let rtData = [];
     if (!guardian) {
         return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
     }
