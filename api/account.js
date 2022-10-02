@@ -16,6 +16,12 @@ async function findAccount(mail) {
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "Invalid email");
+    }else{
+      isExists = Account.findOne({email: req.body.email});
+        if(!isExists){
+          return commUtils.retRsp(rsp, 400, "Your mail has got an Account already!");
+        }
+      }
     }
     if (typeof req.body.code != 'string') {
       return commUtils.retRsp(rsp, 400, "Email verify code not exist.");
