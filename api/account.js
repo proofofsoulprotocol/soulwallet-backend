@@ -101,10 +101,12 @@ async function updateAccount(req, rsp, next) {
         }
         await account.save();
     }
-    rsp.json({
+
+    var msg = updated ? "Updated" : "Not Updated";
+    return commUtils.retRsp(rsp, 200, msg, {
       params: account,
       update: updated
-    })
+    });
   }
 
   async function isWalletOwner(req, rsp, next) {

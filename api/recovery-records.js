@@ -65,7 +65,6 @@ async function addRecoveryRecord(req, rsp, next) {
     })
 }
 
-
 async function updateRecoveryRecord(req, rsp, next) {
     // TODO: validate signature
     const result = await RecoveryRecord.findOne({
