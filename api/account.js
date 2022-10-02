@@ -7,13 +7,7 @@ const jwt = require('jsonwebtoken');
 const {addGuardianWatchListFunc, delGuardianWatchListFunc} = require('./guardian');
 const account = require("../models/account");
 const RecoveryRecord = require("../models/recovery-record");
-// const crypto = require("crypto");
-// addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
-async function findAccount(mail) {
-    const result = await Account.find({email: mail });
-    return result;
-}
 
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
