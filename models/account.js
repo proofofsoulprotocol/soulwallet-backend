@@ -18,7 +18,6 @@ const accountSchema = new mongoose.Schema({
         require: false,
         type: String,
         index: true,
-        unique: true
     },
     guardians: {
         required: false,

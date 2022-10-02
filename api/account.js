@@ -28,8 +28,8 @@ async function addAccount(req, rsp, next) {
 
     const account = new Account({
         email: req.body.email, // one email, one wallet
-        wallet_address: req.body.wallet_address,
-        key: req.body.key
+        wallet_address: req.body.wallet_address
+        // key: req.body.key
     })
     var msg = "Add record successfully.";
     try {
@@ -93,9 +93,15 @@ async function updateAccount(req, rsp, next) {
     const account = await Account.findOne({email: email});
     console.log(account);
     if (account) {
-        updated = true;
-        account.wallet_address = req.body.wallet_address; // one email force one wallet address
-        account.save();
+        if (req.body.wallet_address) {
+          updated = true;
+          account.wallet_address = req.body.wallet_address; // one email force one wallet address
+        }
+        if (req.body.key) {
+          updated = true;
+          account.key = req.body.key;
+        }
+        await account.save();
     }
     rsp.json({
       params: account,
