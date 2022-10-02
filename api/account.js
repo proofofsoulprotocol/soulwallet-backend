@@ -13,7 +13,8 @@ async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "Invalid email");
     }else{
-      isExists = Account.findOne({email: req.body.email});
+      const isExists = await Account.findOne({email: req.body.email});
+      console.log("isExists:",isExists);
         if(isExists){
           return commUtils.retRsp(rsp, 400, "Your mail has got an Account already!");
         }
@@ -42,6 +43,7 @@ async function addAccount(req, rsp, next) {
         msg="Save record error";
         console.log("error:",error);
         console.log("account:", account);
+        return commUtils.retRsp(rsp, 400, msg);
         
     }
 
@@ -88,18 +90,6 @@ async function getWalletAddress(req, rsp, next) {
     wallet_address: wallet_address
   });
 }
-
-// async function updateAccountGuardian(req, rsp, next) {
-//   var exists = false;
-//   const result = await Account.find({email: req.body.email});
-//   if (result.length > 0) {
-//     exists = true;
-//   }
-//   rsp.json({
-//     params: req.body,
-//     exists: exists
-//   })
-// }
 
 async function updateAccount(req, rsp, next) {
     var updated = false;
