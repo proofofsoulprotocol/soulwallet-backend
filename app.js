@@ -16,7 +16,7 @@ const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const jwt = require('./middleware/jwt');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
-const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
+const { addRecoveryRecord, finishRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
 const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
@@ -76,6 +76,7 @@ const main = async () => {
   app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
   app.post('/update-recovery-record', updateRecoveryRecord);
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
+  app.post('/finish-recovery-record', finishRecoveryRecord);
   app.post('/clear-recovery-records', clearRecoveryRecords);
 
   // test
