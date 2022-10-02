@@ -17,7 +17,7 @@ const RecoveryRecord = require('./models/recovery-record');
 const jwt = require('./middleware/jwt');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
 const { addRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
-const {addAccount, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
+const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 
@@ -50,8 +50,10 @@ const main = async () => {
 
   // acount
   app.post('/add-account', addAccount); // express produce a JWT and return
+  app.post('/get-accounts', getAccounts);
+  app.post('/get-wallet-address', getWalletAddress);
   app.post('/is-wallet-owner', isWalletOwner);
-  app.post('/update-account', updateAccount); //update account's wallet_address and guardians
+  app.post('/update-account', jwt, updateAccount); //update account's wallet_address and guardians
   // acount guardian
   app.post('/add-account-guardian', jwt, addAccountGuardian); // add new one, unique
   app.post('/get-account-guardian', jwt, getAccountGuardian); // get a array obj

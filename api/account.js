@@ -52,6 +52,21 @@ async function addAccount(req, rsp, next) {
     });
 }
 
+async function getAccounts(req, rsp, next) {
+  const accounts = await Account.find({ email: req.body.email });
+  return commUtils(rsp, 200, "", accounts);
+}
+
+async function getWalletAddress(req, rsp, next) {
+  const account = await Account.findOne( {email: req.body.email});
+  if (!account) {
+    return commUtils.retRsp(rsp, 404, "Account not found");
+  }
+  return commUtils.retRsp(rsp, 200, "Success", {
+    wallet_address: account.wallet_address
+  });
+}
+
 // async function updateAccountGuardian(req, rsp, next) {
 //   var exists = false;
 //   const result = await Account.find({email: req.body.email});
@@ -66,7 +81,8 @@ async function addAccount(req, rsp, next) {
 
 async function updateAccount(req, rsp, next) {
     var updated = false;
-    const account = await Account.findOne({email: req.body.email});
+    const email = req.auth.email;
+    const account = await Account.findOne({email: email});
     console.log(account);
     if (account) {
         updated = true;
@@ -88,16 +104,14 @@ async function updateAccount(req, rsp, next) {
   }
 
 async function addAccountGuardian(req, rsp, next) {
-    if (!validateEmail(req.body.email)) {
-        return commUtils.retRsp(rsp, 400, "Invalid email");
-    }
+    const email = req.auth.email;
     var guardian = req.body.guardian;
-    console.log("guardian will be added:",guardian);
+    console.log("guardian will be added:", guardian);
 
-    const account = await Account.findOne({email: req.body.email, wallet_address: req.body.wallet_address});
+    const account = await Account.findOne({email: email, wallet_address: req.body.wallet_address});
     var msg = "";
     if (!account) {
-      msg = "Has no record of your mail and wallet_address:"+req.body.email+":::"+ req.body.wallet_address;
+      msg = "Has no record of your mail and wallet_address:"+email+":::"+ req.body.wallet_address;
       return commUtils.retRsp(rsp, 404, msg);
     }
     console.log("account guardian is ",account.guardians);
@@ -108,7 +122,7 @@ async function addAccountGuardian(req, rsp, next) {
     }
     msg = "Add guardian successfully.";
     try { // maybe can improved and refactor
-      const update_guardian = await Account.findOneAndUpdate({email: req.body.email, wallet_address: req.body.wallet_address}, {$addToSet:{guardians: guardian}});
+      const update_guardian = await Account.findOneAndUpdate({email: email, wallet_address: req.body.wallet_address}, {$addToSet:{guardians: guardian}});
       console.log("update result:",update_guardian);
     }
     catch (error) { // has some problems on return msgs
@@ -123,10 +137,11 @@ async function addAccountGuardian(req, rsp, next) {
 
 
 async function updateAccountGuardian(req, rsp, next) {
-  const account = await Account.findOne({email: req.body.email});
+  const email = req.auth.email;
+  const account = await Account.findOne({email: email});
   var msg = "";
   if (account === null) {
-    msg = "Has no record of your mail:"+req.body.email;
+    msg = "Has no record of your mail:"+mail;
   }
   var gIndex = (account.guardians).indexOf(req.body.guardian_old);
   var gIndex2 = (account.guardians).indexOf(req.body.guardian_new);
@@ -145,10 +160,11 @@ async function updateAccountGuardian(req, rsp, next) {
 }
 
 async function getAccountGuardian(req, rsp, next) {
-  const result = await Account.findOne({email: req.body.email, wallet_address: req.body.wallet_address});
+  const email = req.auth.email;
+  const result = await Account.findOne({email: email, wallet_address: req.body.wallet_address});
   var msg = "";
   if (!result) {
-    msg = "Has no record of your Account:"+req.body.email;
+    msg = "Has no record of your Account:" + email;
     console.log(result);
     return commUtils.retRsp(rsp, 200, msg, []);
   }
@@ -160,13 +176,14 @@ async function getAccountGuardian(req, rsp, next) {
 }
 
 async function delAccountGuardian(req, rsp, next) {
+  const email = req.auth.email;
   const account = await Account.findOneAndUpdate(
-    {email: req.body.email,wallet_address: req.body.wallet_address},
+    {email: email, wallet_address: req.body.wallet_address},
     {$pull: {guardians: req.body.guardian }}
     );
   var msg = "";
   if (!account) {
-    msg = "Has no record of your Account:" + req.body.email;
+    msg = "Has no record of your Account:" + email;
     return commUtils.retRsp(rsp, 404, msg);
   }
   var guardians = account.guardians;
@@ -183,4 +200,4 @@ async function delAccountGuardian(req, rsp, next) {
 
 
 // module.exports = {addAccount, updateAccountGuardian, updateAccount, isWalletOwner};
-module.exports = {addAccount, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
+module.exports = {addAccount, getWalletAddress, getAccounts, updateAccount, isWalletOwner, getAccountGuardian, addAccountGuardian, delAccountGuardian, updateAccountGuardian};
