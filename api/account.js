@@ -14,10 +14,11 @@ async function addAccount(req, rsp, next) {
         return commUtils.retRsp(rsp, 400, "Invalid email");
     }else{
       isExists = Account.findOne({email: req.body.email});
-        if(!isExists){
+        if(isExists){
           return commUtils.retRsp(rsp, 400, "Your mail has got an Account already!");
         }
-      }
+    }
+
     if (typeof req.body.code != 'string') {
       return commUtils.retRsp(rsp, 400, "Email verify code not exist.");
     }
