@@ -96,9 +96,9 @@ async function updateRecoveryRecord(req, rsp, next) {
     if (signedNum >= min) {
         result.status = "finished";
         // update wallet key
-        const update_result = await Account.findOneAndUpdate({ wallet_address: req.body.wallet_address},
-            {key: result.new_key});
-        console.log("update new key: " + result.new_key);
+        // const update_result = await Account.findOneAndUpdate({ wallet_address: req.body.wallet_address},
+            // {key: result.new_key});
+        // console.log("update new key: " + result.new_key);
     }
     await result.save();
 
@@ -140,6 +140,21 @@ async function fetchRecoveryRecords(req, rsp, next) {
     });
 }
 
+async function finishRecoveryRecord(req, rsp, next) {
+    const rrRecord = await RecoveryRecord.findOne({
+        new_key: req.body.new_key
+    });
+    if (!rrRecord) {
+        return commUtils.retRsp(rsp, 404, "Record not found");
+    }
+    if (rrRecord.status !== 'finished') {
+        return commUtils.retRsp(rsp, 400, "Missing some records?");
+    }
+    await Account.findOneAndUpdate({wallet_address: rrRecord.wallet_address},
+        {key: req.body.new_key});
+    return commUtils.retRsp(rsp, 200, "New key updated");
+}
+
 async function clearRecoveryRecords(req, rsp, next) {
     // TODO: validate code
     const result = await RecoveryRecord.findOneAndDelete({
@@ -152,4 +167,4 @@ async function clearRecoveryRecords(req, rsp, next) {
     return commUtils.retRsp(rsp, 200, "Deleted");
 }
 
-module.exports = {addRecoveryRecord, updateRecoveryRecord, clearRecoveryRecords, fetchRecoveryRecords};
+module.exports = {addRecoveryRecord, finishRecoveryRecord, updateRecoveryRecord, clearRecoveryRecords, fetchRecoveryRecords};
