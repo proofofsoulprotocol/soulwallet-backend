@@ -24,7 +24,6 @@ async function addAccount(req, rsp, next) {
           return commUtils.retRsp(rsp, 400, "Your mail has got an Account already!");
         }
       }
-    }
     if (typeof req.body.code != 'string') {
       return commUtils.retRsp(rsp, 400, "Email verify code not exist.");
     }
