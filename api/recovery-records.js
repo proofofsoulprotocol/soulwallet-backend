@@ -34,7 +34,7 @@ async function addRecoveryRecord(req, rsp, next) {
         return commUtils.retRsp(rsp, 404, "Account not found");
     }
     const guardians = account.guardians;
-    if (guardians.length < 1) {
+    if (guardians.length < 2) {
         return commUtils.retRsp(rsp, 400, "Missing guardians");
     }
     var recovery_records = [];
