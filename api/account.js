@@ -7,18 +7,18 @@ const jwt = require('jsonwebtoken');
 const {addGuardianWatchListFunc, delGuardianWatchListFunc} = require('./guardian');
 const account = require("../models/account");
 const RecoveryRecord = require("../models/recovery-record");
-// const crypto = require("crypto");
-// addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
-async function findAccount(mail) {
-    const result = await Account.find({email: mail });
-    return result;
-}
 
 async function addAccount(req, rsp, next) {
     if (!validateEmail(req.body.email)) {
         return commUtils.retRsp(rsp, 400, "Invalid email");
+    }else{
+      isExists = Account.findOne({email: req.body.email});
+        if(isExists){
+          return commUtils.retRsp(rsp, 400, "Your mail has got an Account already!");
+        }
     }
+
     if (typeof req.body.code != 'string') {
       return commUtils.retRsp(rsp, 400, "Email verify code not exist.");
     }
@@ -36,12 +36,13 @@ async function addAccount(req, rsp, next) {
     var msg = "Add record successfully.";
     try {
         const accountToSave = await account.save();
+        console.log("accountToSave:",accountToSave);
     }
     catch (error) {
         msg="Save record error";
         console.log("error:",error);
         console.log("account:", account);
-        console.log("accountToSave:",accountToSave);
+        
     }
 
     jwtToken = jwt.sign({
