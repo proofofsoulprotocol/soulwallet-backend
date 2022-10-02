@@ -81,7 +81,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
 
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
-    let rtData = [];
+    const rtData = [];
     if (!guardian) {
         return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
     }
@@ -117,7 +117,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
 async function getSignedRecoveryRecord(req, rsp, next) {
     const guardian = await Guardian.findOne({guardian_address: req.body.guardian_address});
     // console.log("guardian:"+req.body.guardian_address,guardian);
-    let rtData = [];
+    const rtData = [];
     if (!guardian) {
         return commUtils.retRsp(rsp, 200, "Has no guardian record.", rtData);
     }

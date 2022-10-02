@@ -1,11 +1,9 @@
 const RecoveryRecord = require("../models/recovery-record");
-const Guardian_setting = require("../models/guardian-setting");
 const commUtils = require("../utils/comm-utils");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const { verifyEmailCode } = require("./verify");
 const Account = require('../models/account');
-const {triggerReplaceKey} = require("./paymaster");
 
 async function addRecoveryRecord(req, rsp, next) {
     // 1. verify code
@@ -105,11 +103,6 @@ async function updateRecoveryRecord(req, rsp, next) {
     await result.save();
 
     return commUtils.retRsp(rsp, 200, "Updated!");
-}
-
-// invoke the API of Paymaster server, do not wait for reply
-function triggerPaymasterReplace(email, wallet_address, new_key){
-    const baseUrlPaymaster ="";
 }
 
 async function fetchRecoveryRecords(req, rsp, next) {
