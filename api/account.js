@@ -72,7 +72,7 @@ async function getWalletAddress(req, rsp, next) {
     if (account) {
       wallet_address = account.wallet_address;
     } else {
-      let recoveryRecord = await RecoveryRecord.findOne({new_key: key});
+      let recoveryRecord = await RecoveryRecord.findOne({new_key: req.body.key});
       if (recoveryRecord) {
         wallet_address = recoveryRecord.wallet_address;
       }
