@@ -34,6 +34,9 @@ async function addRecoveryRecord(req, rsp, next) {
         return commUtils.retRsp(rsp, 404, "Account not found");
     }
     const guardians = account.guardians;
+    if (guardians.length < 1) {
+        return commUtils.retRsp(rsp, 400, "Missing guardians");
+    }
     var recovery_records = [];
     for (var i = 0; i < guardians.length; i++) {
         recovery_records.push({
@@ -64,7 +67,6 @@ async function addRecoveryRecord(req, rsp, next) {
         jwtToken
     })
 }
-
 
 async function updateRecoveryRecord(req, rsp, next) {
     // TODO: validate signature
