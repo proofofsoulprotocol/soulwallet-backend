@@ -5,6 +5,8 @@ const config = require("../config");
 const { verifyEmailCode } = require('./verify');
 const jwt = require('jsonwebtoken');
 const {addGuardianWatchListFunc, delGuardianWatchListFunc} = require('./guardian');
+const account = require("../models/account");
+const RecoveryRecord = require("../models/recovery-record");
 // const crypto = require("crypto");
 // addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
@@ -56,16 +58,27 @@ async function getAccounts(req, rsp, next) {
 }
 
 async function getWalletAddress(req, rsp, next) {
-  let account;
+  let wallet_address;
   let msg = "";
   if (req.body.email) {
     msg = "Find by email";
-    account = await Account.findOne({email: req.body.email});
+    let account = await Account.findOne({email: req.body.email});
+    if (account) {
+      wallet_address = account.wallet_address;
+    }
   } else if (req.body.key) {
     msg = "Find by key";
-    account = await Account.findOne({key: req.body.key});
+    let account = await Account.findOne({key: req.body.key});
+    if (account) {
+      wallet_address = account.wallet_address;
+    } else {
+      let recoveryRecord = await RecoveryRecord.findOne({new_key: key});
+      if (recoveryRecord) {
+        wallet_address = recoveryRecord.wallet_address;
+      }
+    }
   }
-  if (!account) {
+  if (!wallet_address) {
     return commUtils.retRsp(rsp, 404, "Account not found");
   }
   return commUtils.retRsp(rsp, 200, msg, {
