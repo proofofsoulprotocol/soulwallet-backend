@@ -32,7 +32,7 @@ const main = async () => {
   await GuardianSetting.ensureIndexes();
   await Guardian.ensureIndexes();
   console.log("database connected");
-  console.log("ENV:",process.env.MONGODB_URI);
+  // console.log("ENV:",process.env.MONGODB_URI);
 
   var app = express();
   app.use(helmet());

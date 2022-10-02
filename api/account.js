@@ -33,12 +33,13 @@ async function addAccount(req, rsp, next) {
     var msg = "Add record successfully.";
     try {
         const accountToSave = await account.save();
+        console.log("accountToSave:",accountToSave);
     }
     catch (error) {
         msg="Save record error";
         console.log("error:",error);
         console.log("account:", account);
-        console.log("accountToSave:",accountToSave);
+        
     }
 
     jwtToken = jwt.sign({
