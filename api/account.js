@@ -5,6 +5,8 @@ const config = require("../config");
 const { verifyEmailCode } = require('./verify');
 const jwt = require('jsonwebtoken');
 const {addGuardianWatchListFunc, delGuardianWatchListFunc} = require('./guardian');
+const account = require("../models/account");
+const RecoveryRecord = require("../models/recovery-record");
 // const crypto = require("crypto");
 // addAccount, updateAccountGuardian, updateAccount, isWalletOwner
 
@@ -35,6 +37,7 @@ async function addAccount(req, rsp, next) {
     const account = new Account({
         email: req.body.email, // one email, one wallet
         wallet_address: req.body.wallet_address
+        // key: req.body.key
     })
     var msg = "Add record successfully.";
     try {
@@ -64,12 +67,31 @@ async function getAccounts(req, rsp, next) {
 }
 
 async function getWalletAddress(req, rsp, next) {
-  const account = await Account.findOne( {email: req.body.email});
-  if (!account) {
+  let wallet_address;
+  let msg = "";
+  if (req.body.email) {
+    msg = "Find by email";
+    let account = await Account.findOne({email: req.body.email});
+    if (account) {
+      wallet_address = account.wallet_address;
+    }
+  } else if (req.body.key) {
+    msg = "Find by key";
+    let account = await Account.findOne({key: req.body.key});
+    if (account) {
+      wallet_address = account.wallet_address;
+    } else {
+      let recoveryRecord = await RecoveryRecord.findOne({new_key: req.body.key});
+      if (recoveryRecord) {
+        wallet_address = recoveryRecord.wallet_address;
+      }
+    }
+  }
+  if (!wallet_address) {
     return commUtils.retRsp(rsp, 404, "Account not found");
   }
-  return commUtils.retRsp(rsp, 200, "Success", {
-    wallet_address: account.wallet_address
+  return commUtils.retRsp(rsp, 200, msg, {
+    wallet_address: wallet_address
   });
 }
 
@@ -91,14 +113,22 @@ async function updateAccount(req, rsp, next) {
     const account = await Account.findOne({email: email});
     console.log(account);
     if (account) {
-        updated = true;
-        account.wallet_address = req.body.wallet_address; // one email force one wallet address
-        account.save();
+        if (req.body.wallet_address) {
+          updated = true;
+          account.wallet_address = req.body.wallet_address; // one email force one wallet address
+        }
+        if (req.body.key) {
+          updated = true;
+          account.key = req.body.key;
+        }
+        await account.save();
     }
-    rsp.json({
+
+    var msg = updated ? "Updated" : "Not Updated";
+    return commUtils.retRsp(rsp, 200, msg, {
       params: account,
       update: updated
-    })
+    });
   }
 
   async function isWalletOwner(req, rsp, next) {
