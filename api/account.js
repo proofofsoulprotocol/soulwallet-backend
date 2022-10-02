@@ -82,7 +82,7 @@ async function getWalletAddress(req, rsp, next) {
     return commUtils.retRsp(rsp, 404, "Account not found");
   }
   return commUtils.retRsp(rsp, 200, msg, {
-    wallet_address: account.wallet_address
+    wallet_address: wallet_address
   });
 }
 
