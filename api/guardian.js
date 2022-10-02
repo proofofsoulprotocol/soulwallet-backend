@@ -87,7 +87,8 @@ async function getPendingRecoveryRecord(req, rsp, next) {
     }
     
     const watch_wallet_list =  guardian.watch_wallet_list;
-    for(i = 0; i < watch_wallet_list.length; i++){
+    console.log(req.body.guardian_address, "watch list", watch_wallet_list);
+    for(let i = 0; i < watch_wallet_list.length; i++){
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
         const rRecord = await RecoveryRecord.findOne({wallet_address: watch_wallet_list[i], status: "pending"});
         if(rRecord){
@@ -98,7 +99,7 @@ async function getPendingRecoveryRecord(req, rsp, next) {
                 request_id: rRecord.request_id
             };
 
-            for(j=0;j<rRecord.recovery_records.length;j++){
+            for(let j=0;j<rRecord.recovery_records.length;j++){
                 if (rRecord.recovery_records[j].guardian_address === req.body.guardian_address) {
                     if (!rRecord.recovery_records[j].signature) {
                         rtData.push(item);
@@ -123,7 +124,7 @@ async function getSignedRecoveryRecord(req, rsp, next) {
     }
 
     const watch_wallet_list =  guardian.watch_wallet_list;
-    for(i = 0; i < watch_wallet_list.length; i++){
+    for(let i = 0; i < watch_wallet_list.length; i++){
         console.log("Try to find wallet_address in every recovery record:",watch_wallet_list[i]);
         const rRecords = await RecoveryRecord.find({wallet_address: watch_wallet_list[i]});
         rRecords.forEach(record => {
