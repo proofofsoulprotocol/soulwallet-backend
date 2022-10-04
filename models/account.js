@@ -12,7 +12,8 @@ const accountSchema = new mongoose.Schema({
         required: false,
         type: String,
         index: true,
-        unique: true, // todo 
+        unique: true, // todo
+        sparse: true
     },
     key: {
         require: false,
