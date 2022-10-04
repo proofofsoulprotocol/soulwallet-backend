@@ -22,6 +22,7 @@ const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, 
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
 const {addToList, isOnWishList} = require('./api/wish-list');
+const rateLimiter = require('./middleware/rate-limiter');
 
 var port = process.env.PORT || 3000;
 
@@ -47,12 +48,12 @@ const main = async () => {
   app.set('trust proxy', 2);
 
   // verify
-  app.post('/verify-email', verifyEmail);
-  app.post('/verify-email-num', verifyEmailNum);
+  app.post('/verify-email', rateLimiter, verifyEmail);
+  app.post('/verify-email-num', rateLimiter, verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
 
   // acount
-  app.post('/add-account', addAccount); // express produce a JWT and return
+  app.post('/add-account', rateLimiter, addAccount); // express produce a JWT and return
   app.post('/get-accounts', getAccounts);
   app.post('/get-wallet-address', getWalletAddress);
   app.post('/is-wallet-owner', isWalletOwner);
@@ -76,19 +77,19 @@ const main = async () => {
   app.post('/update-guardian-watch-list', updateGuardianWatchList);
 
   // recovery record
-  app.post('/add-recovery-record', addRecoveryRecord); // express produce a JWT and return
+  app.post('/add-recovery-record', rateLimiter, addRecoveryRecord); // express produce a JWT and return
   app.post('/update-recovery-record', updateRecoveryRecord);
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
   app.post('/finish-recovery-record', finishRecoveryRecord);
   app.post('/clear-recovery-records', clearRecoveryRecords);
 
   // for website api
-  app.post('/add-to-list', addToList); 
-  app.post('/is-on-list', isOnWishList);
+  app.post('/add-to-list', rateLimiter, addToList);
+  app.post('/is-on-list', rateLimiter, isOnWishList);
 
   // test
-  app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
-  app.get('/ip', (req, rsp) => commUtils.retRsp(rsp, 200, "your ip", {ip: req.ip}));
+  app.get('/', rateLimiter, (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
+  app.get('/ip', rateLimiter, (req, rsp) => commUtils.retRsp(rsp, 200, "your ip", {ip: req.ip}));
   app.post('/test-jwt', jwt, async (req, rsp) => {
     if (!req.auth.email) {
       return commUtils.retRsp(rsp, 403, "no auth");

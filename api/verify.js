@@ -6,7 +6,8 @@ const config = require("../config");
 const crypto = require("crypto");
 
 const randomVerifyCode = (length = 6) => {
-    const givenSet = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+    // const givenSet = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+    const givenSet = "0123456789";
     var code = "";
     for (var i = 0; i < length; i++) {
         code += givenSet[crypto.randomInt(0, givenSet.length)];
