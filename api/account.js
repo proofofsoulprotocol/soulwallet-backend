@@ -28,15 +28,15 @@ async function addAccount(req, rsp, next) {
     if (!codeValid) {
       return commUtils.retRsp(rsp, 400, "Code is not valid.");
     }
-
+    let account = {};
     if(req.body.wallet_address){
-      const account = new Account({
+        account = new Account({
         email: req.body.email, // one email, one wallet
         wallet_address: req.body.wallet_address
         // key: req.body.key
       })
     }else{
-      const account = new Account({
+      account = new Account({
         email: req.body.email, // one email, one wallet
       })      
     }
