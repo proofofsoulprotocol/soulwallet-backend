@@ -21,7 +21,7 @@ const { addRecoveryRecord, finishRecoveryRecord, updateRecoveryRecord, fetchReco
 const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
-const {addToList} = require('./api/wish-list');
+const {addToList, isOnWishList} = require('./api/wish-list');
 
 var port = process.env.PORT || 3000;
 
@@ -84,6 +84,7 @@ const main = async () => {
 
   // for website api
   app.post('/add-to-list', addToList); 
+  app.post('/is-on-list', isOnWishList);
 
   // test
   app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
