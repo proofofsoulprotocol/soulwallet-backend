@@ -24,7 +24,7 @@ config.verifyMaxResend = 10;
 
 config.corsOption = {
     origin: [/\.soulwallets\.me$/, 'https://soulwallets.me', 'http://soulwallets.me',
-            /\.localhost:8000$/, '*', 'http://localhost:8000'],
+            /\.localhost:8000$/, '*', 'http://localhost:8000', /\.vercel.app$/],
     credentials: true,
     maxAge:  600,
 };
