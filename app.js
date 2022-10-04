@@ -11,6 +11,7 @@ const commUtils = require('./utils/comm-utils');
 const CORS = require('cors');
 const Account = require('./models/account');
 const Guardian = require('./models/guardian');
+const WishList = require('./models/wish-list');
 const GuardianSetting = require('./models/guardian-setting');
 const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
@@ -20,6 +21,7 @@ const { addRecoveryRecord, finishRecoveryRecord, updateRecoveryRecord, fetchReco
 const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
 const {addGuardianWatchList, getGuardianWatchList, getPendingRecoveryRecord, getSignedRecoveryRecord, updateGuardianWatchList} = require('./api/guardian');
+const {addToList} = require('./api/wish-list');
 
 var port = process.env.PORT || 3000;
 
@@ -31,6 +33,7 @@ const main = async () => {
   await RecoveryRecord.ensureIndexes();
   await GuardianSetting.ensureIndexes();
   await Guardian.ensureIndexes();
+  await WishList.ensureIndexes();
   console.log("database connected");
   // console.log("ENV:",process.env.MONGODB_URI);
 
@@ -78,6 +81,9 @@ const main = async () => {
   app.post('/fetch-recovery-records', fetchRecoveryRecords);
   app.post('/finish-recovery-record', finishRecoveryRecord);
   app.post('/clear-recovery-records', clearRecoveryRecords);
+
+  // for website api
+  app.post('/add-to-list', addToList); 
 
   // test
   app.get('/', (req, rsp) => commUtils.retRsp(rsp, 200, "Hello soulwallet! Welcome!"));
