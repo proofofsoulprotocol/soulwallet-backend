@@ -38,7 +38,7 @@ async function addAccount(req, rsp, next) {
     }else{
       account = new Account({
         email: req.body.email, // one email, one wallet
-      })      
+      })
     }
 
     var msg = "Add record successfully.";
