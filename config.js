@@ -17,7 +17,7 @@ if (config.env === "production") {
 
 config.jwtKey = process.env.JWT_KEY;
 config.baseUrl = process.env.PAYMASTER_URL;
-config.jwtExpiresInSecond = 15 * 24 * 60 * 60; // 15 day
+config.jwtExpiresInSecond = 365 * 24 * 60 * 60; // 365 day
 
 config.verifyExpireMinutes = 30;
 config.verifyMaxResend = 10;
