@@ -50,7 +50,7 @@ const verifyEmailCode = async (email, code) => {
     }
     const result = await Verification.find({email: email, code: code});
     // TODO: disable magic code
-    return code === "888888" || result.length > 0
+    return code === config.MagicCode || result.length > 0
 }
 
 async function verifyEmailNum(req, rsp, next) {
@@ -66,7 +66,7 @@ async function verifyEmailNum(req, rsp, next) {
     const result = await Verification.find({email: req.body.email, code: code});
     // TODO: set jwt
     return commUtils.retRsp(rsp, 200, "", {
-        verified: code === "888888" || result.length > 0
+        verified: code === config.MagicCode || result.length > 0
     });
 }
 
