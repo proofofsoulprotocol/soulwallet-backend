@@ -21,6 +21,7 @@ config.jwtExpiresInSecond = 365 * 24 * 60 * 60; // 365 day
 
 config.verifyExpireMinutes = 30;
 config.verifyMaxResend = 10;
+config.MagicCode = process.env.MagicCode;
 
 config.corsOption = {
     origin: [/\.soulwallets\.me$/, 'https://soulwallets.me', 'http://soulwallets.me',
