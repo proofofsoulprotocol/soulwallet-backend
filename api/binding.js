@@ -33,7 +33,7 @@ async function addBinding(req, rsp, next) {
 }
 
 
-async function removeBinding(req, rsp, next) {
+async function deleteRecord(req, rsp, next) {
 
     const result = await BindingRecord.findOneAndDelete({"wallet_address": req.body.remove_items.wallet_address, 
         "type": req.body.remove_items.type, "value":req.body.remove_items.value});
@@ -53,13 +53,14 @@ async function _isBindingExists(req, rsp, next) {
         for(let i=0;i<result.length;i++){
             if((req.body.type in result[i].type)&& (req.body.value in result[i].value)){
                 exists = true;
+                break;
             }
         }
     return commUtils.retRsp(rsp, 200, "", result);
     } else {
-    return commUtils.retRsp(rsp, 500, "", result);
+    return commUtils.retRsp(rsp, 200, "", false);
     }
 }
 
 
-module.exports = {addBinding, _isBindingExists, removeBinding};
+module.exports = {addBinding, _isBindingExists, deleteRecord};
