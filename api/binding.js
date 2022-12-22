@@ -7,16 +7,9 @@ const crypto = require("crypto");
 
 
 const validateBindingData = (binding) => {
-    if("jwt" in binding){
-        if("wallet_address" in binding){
-            if("binding_item" in binding){
-                return true;
-            } else {
-                return false;
-            }
-        }else {
-            return false;
-        }
+    if(("jwt" in binding)&&("wallet_address" in binding)&&("binding_item" in binding)){
+            return true;
+
     } else {
         return false;
     }
