@@ -14,9 +14,7 @@ const bindingRecordSchema = new mongoose.Schema({
     date: {
         require: true,
         type: Date,
-        default: Date.now,
-        index: true,
-        expires: config.verifyExpireMinutes * 60
+        default: Date.now
     }
 });
 
