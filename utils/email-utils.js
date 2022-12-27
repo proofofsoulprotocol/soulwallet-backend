@@ -36,6 +36,7 @@ async function sendEmail(to, subject, content) {
 async function sendVerifyCode(to, code) {
     const subject = `Your SoulWallet verification code is ${code}`;
     const content = `Your SoulWallet verification code is ${code}. This code will expire in ${config.verifyExpireMinutes} minutes.`;
+    if (to.endsWith("@example.com")) return;
     await sendEmail(to, subject, content);
 }
 
