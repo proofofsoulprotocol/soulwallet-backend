@@ -17,6 +17,7 @@ const Verification = require('./models/verification');
 const RecoveryRecord = require('./models/recovery-record');
 const jwt = require('./middleware/jwt');
 const { verifyEmail, verifyEmailExists, verifyEmailNum } = require('./api/verify');
+const { addBinding, _isBindingExists, removeBinding } = require('./api/binding');
 const { addRecoveryRecord, finishRecoveryRecord, updateRecoveryRecord, fetchRecoveryRecords, clearRecoveryRecords } = require("./api/recovery-records");
 const {addAccount, getAccounts, getWalletAddress, updateAccount, isWalletOwner, addAccountGuardian, getAccountGuardian, delAccountGuardian, updateAccountGuardian} = require("./api/account");
 const {addGuardianSetting, updateGuardianSetting} = require('./api/guardian-setting');
@@ -47,10 +48,15 @@ const main = async () => {
   app.use(cookieParser());
   app.set('trust proxy', 2);
 
-  // verify
+  // util
   app.post('/verify-email', rateLimiter, verifyEmail);
   app.post('/verify-email-num', rateLimiter, verifyEmailNum);
   app.post('/verify-email-exists', verifyEmailExists);
+
+  // binding
+  app.post('/binding/add-binding', rateLimiter, addBinding);
+  app.post('/binding/_is-binding-exists', rateLimiter, _isBindingExists);
+  app.post('/binding/remove-binding', rateLimiter, removeBinding);
 
   // acount
   app.post('/add-account', rateLimiter, addAccount); // express produce a JWT and return
@@ -58,6 +64,7 @@ const main = async () => {
   app.post('/get-wallet-address', getWalletAddress);
   app.post('/is-wallet-owner', isWalletOwner);
   app.post('/update-account', jwt, updateAccount); //update account's wallet_address and guardians
+  
   // acount guardian
   app.post('/add-account-guardian', jwt, addAccountGuardian); // add new one, unique
   app.post('/get-account-guardian', jwt, getAccountGuardian); // get a array obj
